@@ -67,7 +67,140 @@ header p { margin: 0; opacity: 0.85; font-size: 13px; }
   font-weight: 500;
 }
 .day-tabs button.active { background: #2c3e50; color: #fff; border-color: #2c3e50; }
+
+/* Категория-кнопки фильтра */
+.filter-section {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+.filter-section h3 {
+  margin: 0;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+.filter-section h3:hover { background: #f7f5f0; }
+.filter-section h3 .head-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.filter-section h3 .summary {
+  font-size: 11px;
+  font-weight: 400;
+  color: #888;
+}
+.filter-section h3 .reset-link {
+  font-size: 11px;
+  font-weight: 400;
+  color: #888;
+  cursor: pointer;
+}
+.filter-section h3 .reset-link:hover { color: #2c3e50; text-decoration: underline; }
+.filter-section h3 .chevron {
+  font-size: 10px;
+  color: #888;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+.filter-section.collapsed h3 .chevron { transform: rotate(-90deg); }
+.filter-body {
+  padding: 4px 14px 12px 14px;
+  border-top: 1px solid #f0ede5;
+}
+.filter-section.collapsed .filter-body { display: none; }
+.cat-filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.cat-filters button {
+  padding: 5px 11px;
+  background: #fff;
+  border: 1.5px solid var(--btn-color, #ccc);
+  color: var(--btn-color, #555);
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: inherit;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+.cat-filters button.active {
+  background: var(--btn-color, #2c3e50);
+  color: #fff;
+}
+.cat-filters button:hover:not(.active) { background: #f5f5f5; }
+.loc-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+}
+.loc-filters label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 400 !important;
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+.loc-filters label:hover { background: #f5f5f5; }
+.loc-filters input[type="checkbox"] { cursor: pointer; margin: 0; }
+
 .stats { font-size: 13px; color: #666; margin-bottom: 12px; }
+.selection-bar {
+  background: #fffbe8;
+  border: 1.5px solid #b8860b;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+.selection-bar h3 {
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #5a4a1a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.selection-list { display: flex; flex-direction: column; gap: 6px; }
+.selection-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 10px;
+  background: #fff;
+  border-radius: 6px;
+  font-size: 12px;
+}
+.selection-item .info { flex: 1; min-width: 0; }
+.selection-item .info b { color: #2c3e50; }
+.selection-item .info .meta { color: #888; font-size: 11px; }
+.selection-item button {
+  background: transparent;
+  border: none;
+  color: #c62828;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 2px 6px;
+  line-height: 1;
+}
+.selection-item button:hover { color: #8a0000; }
 .film-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 10px; }
 .film {
   background: #fff;
@@ -89,11 +222,17 @@ header p { margin: 0; opacity: 0.85; font-size: 13px; }
   width: 5px;
   background: var(--cat-color, #ccc);
 }
-.film:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); transform: translateY(-1px); }
+.film:hover:not(.locked) { box-shadow: 0 2px 8px rgba(0,0,0,0.1); transform: translateY(-1px); }
 .film.selected { border-color: #2c3e50; background: #fffbe8; }
 .film.conflict { opacity: 0.45; background: #ffeeee; }
 .film.tight { background: #fff3e0; }
 .film.ok { background: #e8f5e9; }
+.film.locked {
+  cursor: not-allowed;
+  opacity: 0.4;
+  background: #f5e0e0;
+}
+.film.locked .film-title { text-decoration: line-through; text-decoration-thickness: 1px; }
 .film-title {
   font-weight: 600;
   font-size: 14px;
@@ -189,6 +328,39 @@ footer { text-align: center; padding: 24px 20px; font-size: 12px; color: #888; }
   transition: background 0.15s;
 }
 .verify-banner a:hover { background: #1a2733; }
+.unofficial-note {
+  font-size: 11px;
+  color: #888;
+  margin-top: 6px;
+  font-style: italic;
+}
+footer { text-align: center; padding: 28px 20px; font-size: 12px; color: #888; line-height: 1.7; }
+.socials { display: flex; gap: 14px; justify-content: center; margin-bottom: 12px; flex-wrap: wrap; }
+.socials a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  background: #fff;
+  color: #2c3e50;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid #d0d0d0;
+  transition: all 0.15s;
+}
+.socials a:hover {
+  background: #2c3e50;
+  color: #fff;
+  border-color: #2c3e50;
+}
+.socials-intro {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 10px;
+  font-style: italic;
+}
 @media (max-width: 600px) {
   .film-grid { grid-template-columns: 1fr; }
   .controls { flex-direction: column; align-items: stretch; }
@@ -198,7 +370,7 @@ footer { text-align: center; padding: 24px 20px; font-size: 12px; color: #888; }
 <body>
 <header>
   <h1>🎬 Cannes 2026 — Schedule Planner</h1>
-  <p>May 20–23 · Click any film to see which other screenings you can still catch, factoring in travel between venues</p>
+  <p>May 20–23 · Click films to build your day, factoring in travel between venues. Conflicting screenings are auto-locked.</p>
 </header>
 
 <div class="container">
@@ -220,7 +392,7 @@ footer { text-align: center; padding: 24px 20px; font-size: 12px; color: #888; }
         <option value="30">30</option>
       </select>
     </label>
-    <button class="clear-btn" id="clear" disabled>Clear selection</button>
+    <button class="clear-btn" id="clear" disabled>Clear all selections</button>
   </div>
 
   <div class="day-tabs" id="dayTabs">
@@ -231,20 +403,55 @@ footer { text-align: center; padding: 24px 20px; font-size: 12px; color: #888; }
     <button data-day="23">Sat 23</button>
   </div>
 
+  <div class="filter-section collapsed" id="catSection">
+    <h3 data-toggle="catSection">
+      <span>Festival sections</span>
+      <span class="head-meta">
+        <span class="summary" id="catSummary"></span>
+        <span class="reset-link" id="resetCats">all</span>
+        <span class="chevron">▼</span>
+      </span>
+    </h3>
+    <div class="filter-body">
+      <div class="cat-filters" id="catFilters"></div>
+    </div>
+  </div>
+
+  <div class="filter-section collapsed" id="locSection">
+    <h3 data-toggle="locSection">
+      <span>Venues</span>
+      <span class="head-meta">
+        <span class="summary" id="locSummary"></span>
+        <span class="reset-link" id="resetLocs">all</span>
+        <span class="chevron">▼</span>
+      </span>
+    </h3>
+    <div class="filter-body">
+      <div class="loc-filters" id="locFilters"></div>
+    </div>
+  </div>
+
   <div class="gala-info">
     🎩 <strong>Black tie required</strong> for screenings marked with this icon — evening sessions in the Grand Théâtre Lumière and the festival closing ceremony.
   </div>
 
   <div class="verify-banner">
-    <span>📋 Not sure the schedule is up to date? Download the latest official version from the festival website.</span>
+    <span>📋 Not sure the schedule is up to date? Download the latest official version from the festival website.
+      <div class="unofficial-note">⚠️ This is an unofficial planner — not affiliated with the Festival de Cannes or its organisers.</div>
+    </span>
     <a href="https://www.festival-cannes.com/2026/les-horaires-des-projections-du-79e-festival-de-cannes/" target="_blank" rel="noopener noreferrer">Open official schedule ↗</a>
   </div>
 
   <div class="legend" id="legend" style="display:none">
-    <span><span class="swatch" style="background:#fffbe8;border:2px solid #2c3e50"></span> Selected</span>
+    <span><span class="swatch" style="background:#fffbe8;border:2px solid #2c3e50"></span> In your plan</span>
     <span><span class="swatch" style="background:#e8f5e9"></span> You can make it</span>
     <span><span class="swatch" style="background:#fff3e0"></span> Tight</span>
-    <span><span class="swatch" style="background:#ffeeee"></span> Won't make it</span>
+    <span><span class="swatch" style="background:#f5e0e0"></span> Locked (conflicts)</span>
+  </div>
+
+  <div class="selection-bar" id="selectionBar" style="display:none">
+    <h3>Your plan</h3>
+    <div class="selection-list" id="selectionList"></div>
   </div>
 
   <div class="stats" id="stats"></div>
@@ -252,86 +459,199 @@ footer { text-align: center; padding: 24px 20px; font-size: 12px; color: #888; }
 </div>
 
 <footer>
+  <div class="socials-intro">If this planner was useful to you, let's connect!</div>
+  <div class="socials">
+    <a href="https://boxd.it/kRV7P" target="_blank" rel="noopener noreferrer">🎞 Letterboxd</a>
+    <a href="https://www.instagram.com/n1ck_ta" target="_blank" rel="noopener noreferrer">📷 Instagram</a>
+    <a href="https://www.linkedin.com/in/nikita-duzhenko" target="_blank" rel="noopener noreferrer">💼 LinkedIn</a>
+  </div>
   Source: 79<sup>e</sup> Festival International du Film de Cannes — official screenings guide.<br>
-  Travel times: walking 5 km/h · scooter 15 km/h + 2 min unlock · festival shuttle (Navette ↔ Cineum) ≈18 min including average wait.
+  Travel times: walking 5 km/h · scooter 15 km/h + 2 min unlock · festival shuttle (Navette ↔ Cineum) ≈18 min including average wait.<br>
+  <span style="opacity:0.7">This is an unofficial planner. Not affiliated with the Festival de Cannes.</span>
 </footer>
 
 <script>
-const events = [{"id": 0, "day": "20", "start": "00:30", "title": "ROMA ELASTICA", "director": "Bertrand Mandico", "dur": "1h47", "location": "Grand Théâtre Lumière", "category": "Midnight Screening", "gala": false, "abs_s": 30, "abs_e": 137}, {"id": 1, "day": "20", "start": "08:30", "title": "LE CORSET (IRON BOY)", "director": "Louis Clichy", "dur": "1h29", "location": "Salle Debussy", "category": "Next-Day Screening", "gala": false, "abs_s": 510, "abs_e": 599}, {"id": 2, "day": "20", "start": "08:30", "title": "MINOTAUR", "director": "Andreï Zviaguintsev", "dur": "2h15", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": false, "abs_s": 510, "abs_e": 645}, {"id": 3, "day": "20", "start": "08:45", "title": "I SEE BUILDINGS FALL LIKE LIGHTNING", "director": "Clio Barnard", "dur": "1h49", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 525, "abs_e": 634}, {"id": 4, "day": "20", "start": "08:45", "title": "L'INCONNUE", "director": "Arthur Harari", "dur": "2h19", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 525, "abs_e": 664}, {"id": 5, "day": "20", "start": "08:45", "title": "MINOTAUR", "director": "Andreï Zviaguintsev", "dur": "2h15", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 525, "abs_e": 660}, {"id": 6, "day": "20", "start": "08:45", "title": "SEIS MESES EN EL EDIFICIO ROSA CON AZUL", "director": "Bruno Santamaría Razo", "dur": "1h45", "location": "Espace Miramar", "category": "Critics' Week", "gala": false, "abs_s": 525, "abs_e": 630}, {"id": 7, "day": "20", "start": "09:15", "title": "BEN'IMANA", "director": "Marie-Clémentine Dusabejambo", "dur": "1h36", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 555, "abs_e": 651}, {"id": 8, "day": "20", "start": "09:15", "title": "EVERYTIME", "director": "Sandra Wollner", "dur": "2h01", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 555, "abs_e": 676}, {"id": 9, "day": "20", "start": "11:00", "title": "CŒUR SECRET (A SECRET HEART)", "director": "Tom Fontenille", "dur": "1h28", "location": "Studio 13", "category": "ACID", "gala": false, "abs_s": 660, "abs_e": 748}, {"id": 10, "day": "20", "start": "11:00", "title": "ELEPHANTS IN THE FOG", "director": "Abinash Bikram Shah", "dur": "1h43", "location": "Salle Debussy", "category": "Un Certain Regard", "gala": false, "abs_s": 660, "abs_e": 763}, {"id": 11, "day": "20", "start": "11:30", "title": "ADIEU MONDE CRUEL", "director": "Félix de Givry", "dur": "1h33", "location": "Espace Miramar", "category": "Critics' Week", "gala": false, "abs_s": 690, "abs_e": 783}, {"id": 12, "day": "20", "start": "11:30", "title": "LA PERRA", "director": "Dominga Sotomayor", "dur": "1h52", "location": "Les Arcades", "category": "Directors' Fortnight", "gala": false, "abs_s": 690, "abs_e": 802}, {"id": 13, "day": "20", "start": "11:30", "title": "LE CORSET (IRON BOY)", "director": "Louis Clichy", "dur": "1h29", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 690, "abs_e": 779}, {"id": 14, "day": "20", "start": "11:45", "title": "AMARGA NAVIDAD", "director": "Pedro Almodóvar", "dur": "1h52", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": false, "abs_s": 705, "abs_e": 817}, {"id": 15, "day": "20", "start": "11:45", "title": "AMARGA NAVIDAD", "director": "Pedro Almodóvar", "dur": "1h52", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 705, "abs_e": 817}, {"id": 16, "day": "20", "start": "11:45", "title": "FJORD", "director": "Cristian Mungiu", "dur": "2h26", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 705, "abs_e": 851}, {"id": 17, "day": "20", "start": "11:50", "title": "LA MÁS DULCE", "director": "Laïla Marrakchi", "dur": "1h41", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 710, "abs_e": 811}, {"id": 18, "day": "20", "start": "12:00", "title": "DEATH HAS NO MASTER", "director": "Jorge Thielen Armand", "dur": "1h44", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 720, "abs_e": 824}, {"id": 19, "day": "20", "start": "14:00", "title": "MOULIN", "director": "László Nemes", "dur": "2h10", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 840, "abs_e": 970}, {"id": 20, "day": "20", "start": "14:00", "title": "YESTERDAY THE EYE DIDN'T SLEEP", "director": "Rakan Mayasi", "dur": "1h40", "location": "Salle Debussy", "category": "Un Certain Regard", "gala": false, "abs_s": 840, "abs_e": 940}, {"id": 21, "day": "20", "start": "14:15", "title": "DIAMOND", "director": "Andy Garcia", "dur": "1h58", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 855, "abs_e": 973}, {"id": 22, "day": "20", "start": "14:15", "title": "LUCY LOST", "director": "Olivier Clert", "dur": "1h25", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 855, "abs_e": 940}, {"id": 23, "day": "20", "start": "14:45", "title": "LE TRIANGLE D'OR", "director": "Hélène Rosselet-Ruiz", "dur": "1h30", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 885, "abs_e": 975}, {"id": 24, "day": "20", "start": "15:00", "title": "LES ROCHES ROUGES (RED ROCKS)", "director": "Bruno Dumont", "dur": "1h31", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 900, "abs_e": 991}, {"id": 25, "day": "20", "start": "15:00", "title": "NOTRE SALUT", "director": "Emmanuel Marre", "dur": "2h35", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": false, "abs_s": 900, "abs_e": 1055}, {"id": 26, "day": "20", "start": "16:30", "title": "BLAISE", "director": "Dimitri Planchon & Jean-Paul Guigue", "dur": "1h22", "location": "Alexandre III", "category": "ACID", "gala": false, "abs_s": 990, "abs_e": 1072}, {"id": 27, "day": "20", "start": "16:30", "title": "HER PRIVATE HELL", "director": "Nicolas Winding Refn", "dur": "1h49", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 990, "abs_e": 1099}, {"id": 28, "day": "20", "start": "16:30", "title": "LA SYMPHONIE PASTORALE", "director": "Jean Delannoy", "dur": "1h37", "location": "Salle Buñuel", "category": "Cannes Classics", "gala": false, "abs_s": 990, "abs_e": 1087}, {"id": 29, "day": "20", "start": "16:30", "title": "TITANIC OCEAN", "director": "Konstantina Kotzamani", "dur": "2h10", "location": "Salle Debussy", "category": "Un Certain Regard", "gala": false, "abs_s": 990, "abs_e": 1120}, {"id": 30, "day": "20", "start": "16:45", "title": "HOPE", "director": "Na Hong-jin", "dur": "2h40", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 1005, "abs_e": 1165}, {"id": 31, "day": "20", "start": "16:45", "title": "KOKUROJO (LE CHÂTEAU D'ARIOKA)", "director": "Kurosawa Kiyoshi", "dur": "2h27", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 1005, "abs_e": 1152}, {"id": 32, "day": "20", "start": "17:00", "title": "GARANCE", "director": "Jeanne Herry", "dur": "2h00", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 1020, "abs_e": 1140}, {"id": 33, "day": "20", "start": "18:30", "title": "I SEE BUILDINGS FALL LIKE LIGHTNING", "director": "Clio Barnard", "dur": "1h49", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 1110, "abs_e": 1219}, {"id": 34, "day": "20", "start": "18:45", "title": "BEN'IMANA", "director": "Marie-Clémentine Dusabejambo", "dur": "1h36", "location": "Salle Bazin", "category": "Next-Day Screening", "gala": false, "abs_s": 1125, "abs_e": 1221}, {"id": 35, "day": "20", "start": "18:45", "title": "LA BATAILLE DE GAULLE : L'ÂGE DE FER", "director": "Antonin Baudry", "dur": "2h40", "location": "Grand Théâtre Lumière", "category": "Special Screening", "gala": true, "abs_s": 1125, "abs_e": 1285}, {"id": 36, "day": "20", "start": "19:00", "title": "DERNSIE: THE AMAZING LIFE OF BRUCE DERN", "director": "Mike Mendez", "dur": "1h51", "location": "Salle Buñuel", "category": "Cannes Classics", "gala": false, "abs_s": 1140, "abs_e": 1251}, {"id": 37, "day": "20", "start": "19:30", "title": "MARIAGE AU GOÛT D'ORANGE", "director": "Christophe Honoré", "dur": "1h55", "location": "Salle Debussy", "category": "Cannes Première", "gala": false, "abs_s": 1170, "abs_e": 1285}, {"id": 38, "day": "20", "start": "19:45", "title": "LES SURVIVANTS DU CHE", "director": "Christophe Dimitri Réveille", "dur": "1h38", "location": "Salle Agnès Varda", "category": "Special Screening", "gala": false, "abs_s": 1185, "abs_e": 1283}, {"id": 39, "day": "20", "start": "20:00", "title": "CŒUR SECRET (A SECRET HEART)", "director": "Tom Fontenille", "dur": "1h28", "location": "Les Arcades", "category": "ACID", "gala": false, "abs_s": 1200, "abs_e": 1288}, {"id": 40, "day": "20", "start": "20:45", "title": "ADIEU MONDE CRUEL", "director": "Félix de Givry", "dur": "1h33", "location": "Espace Miramar", "category": "Critics' Week", "gala": false, "abs_s": 1245, "abs_e": 1338}, {"id": 41, "day": "20", "start": "21:00", "title": "KOKUROJO (LE CHÂTEAU D'ARIOKA)", "director": "Kurosawa Kiyoshi", "dur": "2h27", "location": "Salle Agnès Varda", "category": "Next-Day Screening", "gala": false, "abs_s": 1260, "abs_e": 1407}, {"id": 42, "day": "20", "start": "21:15", "title": "DEATH HAS NO MASTER", "director": "Jorge Thielen Armand", "dur": "1h44", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 1275, "abs_e": 1379}, {"id": 43, "day": "20", "start": "22:30", "title": "LOW EXPECTATIONS", "director": "Eivind Landsvik", "dur": "1h45", "location": "Les Arcades", "category": "Directors' Fortnight", "gala": false, "abs_s": 1350, "abs_e": 1455}, {"id": 44, "day": "20", "start": "22:30", "title": "THE MAN I LOVE", "director": "Ira Sachs", "dur": "1h35", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": true, "abs_s": 1350, "abs_e": 1445}, {"id": 45, "day": "21", "start": "08:30", "title": "THE MAN I LOVE", "director": "Ira Sachs", "dur": "1h35", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": false, "abs_s": 1950, "abs_e": 2045}, {"id": 46, "day": "21", "start": "08:30", "title": "YESTERDAY THE EYE DIDN'T SLEEP", "director": "Rakan Mayasi", "dur": "1h40", "location": "Salle Debussy", "category": "Next-Day Screening", "gala": false, "abs_s": 1950, "abs_e": 2050}, {"id": 47, "day": "21", "start": "08:45", "title": "LE VERTIGE (VERTIGINOUS)", "director": "Quentin Dupieux", "dur": "1h07", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 1965, "abs_e": 2032}, {"id": 48, "day": "21", "start": "08:45", "title": "MINOTAUR", "director": "Andreï Zviaguintsev", "dur": "2h15", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 1965, "abs_e": 2100}, {"id": 49, "day": "21", "start": "08:45", "title": "THE MAN I LOVE", "director": "Ira Sachs", "dur": "1h35", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 1965, "abs_e": 2060}, {"id": 50, "day": "21", "start": "09:00", "title": "Invitation Next Step Studio Indonesia (Shorts)", "director": "—", "dur": "1h01", "location": "Espace Miramar", "category": "Critics' Week", "gala": false, "abs_s": 1980, "abs_e": 2041}, {"id": 51, "day": "21", "start": "09:15", "title": "BEN'IMANA", "director": "Marie-Clémentine Dusabejambo", "dur": "1h36", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 1995, "abs_e": 2091}, {"id": 52, "day": "21", "start": "09:15", "title": "ROMA ELASTICA", "director": "Bertrand Mandico", "dur": "1h47", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 1995, "abs_e": 2102}, {"id": 53, "day": "21", "start": "11:00", "title": "LIVING TWICE, DYING THRICE", "director": "Karim Lakzadeh", "dur": "1h43", "location": "Studio 13", "category": "ACID", "gala": false, "abs_s": 2100, "abs_e": 2203}, {"id": 54, "day": "21", "start": "11:00", "title": "La CINEF Selection — Programme 4", "director": "—", "dur": "1h15", "location": "Salle Buñuel", "category": "La CINEF", "gala": false, "abs_s": 2100, "abs_e": 2175}, {"id": 55, "day": "21", "start": "11:00", "title": "NOTRE SALUT", "director": "Emmanuel Marre", "dur": "2h35", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": false, "abs_s": 2100, "abs_e": 2255}, {"id": 56, "day": "21", "start": "11:00", "title": "NOTRE SALUT", "director": "Emmanuel Marre", "dur": "2h35", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 2100, "abs_e": 2255}, {"id": 57, "day": "21", "start": "11:00", "title": "Prix Découverte Sony & Grand Prix Ami Paris", "director": "—", "dur": "—", "location": "Espace Miramar", "category": "Critics' Week", "gala": false, "abs_s": null, "abs_e": null}, {"id": 58, "day": "21", "start": "11:00", "title": "UĻA (ULYA)", "director": "Viesturs Kairišs", "dur": "1h42", "location": "Salle Debussy", "category": "Un Certain Regard", "gala": false, "abs_s": 2100, "abs_e": 2202}, {"id": 59, "day": "21", "start": "11:30", "title": "LE CORSET (IRON BOY)", "director": "Louis Clichy", "dur": "1h29", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 2130, "abs_e": 2219}, {"id": 60, "day": "21", "start": "11:30", "title": "Shorts Programme 1 — Fortnight", "director": "—", "dur": "1h44", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 2130, "abs_e": 2234}, {"id": 61, "day": "21", "start": "11:45", "title": "AMARGA NAVIDAD", "director": "Pedro Almodóvar", "dur": "1h52", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 2145, "abs_e": 2257}, {"id": 62, "day": "21", "start": "11:45", "title": "ELEPHANTS IN THE FOG", "director": "Abinash Bikram Shah", "dur": "1h43", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 2145, "abs_e": 2248}, {"id": 63, "day": "21", "start": "12:00", "title": "I SEE BUILDINGS FALL LIKE LIGHTNING", "director": "Clio Barnard", "dur": "1h49", "location": "Olympia", "category": "Directors' Fortnight", "gala": false, "abs_s": 2160, "abs_e": 2269}, {"id": 64, "day": "21", "start": "13:45", "title": "LES SURVIVANTS DU CHE", "director": "Christophe Dimitri Réveille", "dur": "1h38", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 2265, "abs_e": 2363}, {"id": 65, "day": "21", "start": "14:00", "title": "MARIAGE AU GOÛT D'ORANGE", "director": "Christophe Honoré", "dur": "1h55", "location": "Salle Agnès Varda", "category": "Next-Day Screening", "gala": false, "abs_s": 2280, "abs_e": 2395}, {"id": 66, "day": "21", "start": "14:00", "title": "VICTORIAN PSYCHO", "director": "Zachary Wigon", "dur": "1h30", "location": "Salle Debussy", "category": "Un Certain Regard", "gala": false, "abs_s": 2280, "abs_e": 2370}, {"id": 67, "day": "21", "start": "14:15", "title": "DIAMOND", "director": "Andy Garcia", "dur": "1h58", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 2295, "abs_e": 2413}, {"id": 68, "day": "21", "start": "14:15", "title": "LA BATAILLE DE GAULLE : L'ÂGE DE FER", "director": "Antonin Baudry", "dur": "2h40", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 2295, "abs_e": 2455}, {"id": 69, "day": "21", "start": "14:15", "title": "YESTERDAY THE EYE DIDN'T SLEEP", "director": "Rakan Mayasi", "dur": "1h40", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 2295, "abs_e": 2395}, {"id": 70, "day": "21", "start": "14:30", "title": "Rendez-vous with Tilda Swinton", "director": "—", "dur": "1h30", "location": "Salle Buñuel", "category": "Rendez-vous", "gala": false, "abs_s": 2310, "abs_e": 2400}, {"id": 71, "day": "21", "start": "14:30", "title": "TITANIC OCEAN", "director": "Konstantina Kotzamani", "dur": "2h10", "location": "Salle Bazin", "category": "Next-Day Screening", "gala": false, "abs_s": 2310, "abs_e": 2440}, {"id": 72, "day": "21", "start": "15:00", "title": "Invitation: Festival International de Morelia", "director": "—", "dur": "1h12", "location": "Espace Miramar", "category": "Critics' Week", "gala": false, "abs_s": 2340, "abs_e": 2412}, {"id": 73, "day": "21", "start": "15:00", "title": "Shorts Programme 2 — Fortnight", "director": "—", "dur": "1h49", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 2340, "abs_e": 2449}, {"id": 74, "day": "21", "start": "15:00", "title": "THE MAN I LOVE", "director": "Ira Sachs", "dur": "1h35", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": false, "abs_s": 2340, "abs_e": 2435}, {"id": 75, "day": "21", "start": "16:00", "title": "TITANIC OCEAN", "director": "Konstantina Kotzamani", "dur": "2h10", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 2400, "abs_e": 2530}, {"id": 76, "day": "21", "start": "16:30", "title": "DANS LA GUEULE DE L'OGRE", "director": "Mahsa Karampour", "dur": "1h26", "location": "Alexandre III", "category": "ACID", "gala": false, "abs_s": 2430, "abs_e": 2516}, {"id": 77, "day": "21", "start": "16:30", "title": "L'INCONNUE", "director": "Arthur Harari", "dur": "2h19", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 2430, "abs_e": 2569}, {"id": 78, "day": "21", "start": "16:45", "title": "FJORD", "director": "Cristian Mungiu", "dur": "2h26", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 2445, "abs_e": 2591}, {"id": 79, "day": "21", "start": "17:15", "title": "MARIAGE AU GOÛT D'ORANGE", "director": "Christophe Honoré", "dur": "1h55", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 2475, "abs_e": 2590}, {"id": 80, "day": "21", "start": "17:15", "title": "Talents Adami | Shorts", "director": "—", "dur": "1h00", "location": "Espace Miramar", "category": "Critics' Week", "gala": false, "abs_s": 2475, "abs_e": 2535}, {"id": 81, "day": "21", "start": "18:00", "title": "LA BOLA NEGRA", "director": "Javier Calvo & Javier Ambrossi", "dur": "2h35", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": true, "abs_s": 2520, "abs_e": 2675}, {"id": 82, "day": "21", "start": "18:00", "title": "Palmarès La CINEF", "director": "—", "dur": "—", "location": "Salle Buñuel", "category": "La CINEF", "gala": false, "abs_s": null, "abs_e": null}, {"id": 83, "day": "21", "start": "19:00", "title": "LE VERTIGE (Closing)", "director": "Quentin Dupieux", "dur": "1h07", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 2580, "abs_e": 2647}, {"id": 84, "day": "21", "start": "19:00", "title": "LIVING TWICE, DYING THRICE", "director": "Karim Lakzadeh", "dur": "1h43", "location": "Le Raimu", "category": "ACID", "gala": false, "abs_s": 2580, "abs_e": 2683}, {"id": 85, "day": "21", "start": "19:30", "title": "THE END OF IT", "director": "Maria Martínez Bayona", "dur": "1h42", "location": "Salle Debussy", "category": "Cannes Première", "gala": false, "abs_s": 2610, "abs_e": 2712}, {"id": 86, "day": "21", "start": "20:00", "title": "LIVING TWICE, DYING THRICE", "director": "Karim Lakzadeh", "dur": "1h43", "location": "Olympia", "category": "ACID", "gala": false, "abs_s": 2640, "abs_e": 2743}, {"id": 87, "day": "21", "start": "20:00", "title": "Prix Fondation Gan à la Diffusion", "director": "—", "dur": "—", "location": "Espace Miramar", "category": "Critics' Week", "gala": false, "abs_s": null, "abs_e": null}, {"id": 88, "day": "21", "start": "20:15", "title": "ELEPHANTS IN THE FOG", "director": "Abinash Bikram Shah", "dur": "1h43", "location": "Salle Bazin", "category": "Next-Day Screening", "gala": false, "abs_s": 2655, "abs_e": 2758}, {"id": 89, "day": "21", "start": "20:30", "title": "DEATH HAS NO MASTER", "director": "Jorge Thielen Armand", "dur": "1h44", "location": "Olympia", "category": "Directors' Fortnight", "gala": false, "abs_s": 2670, "abs_e": 2774}, {"id": 90, "day": "21", "start": "21:45", "title": "LE VERTIGE (VERTIGINOUS)", "director": "Quentin Dupieux", "dur": "1h07", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 2745, "abs_e": 2812}, {"id": 91, "day": "21", "start": "22:00", "title": "COWARD", "director": "Lukas Dhont", "dur": "2h00", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": true, "abs_s": 2760, "abs_e": 2880}, {"id": 92, "day": "21", "start": "22:00", "title": "NOTRE SALUT", "director": "Emmanuel Marre", "dur": "2h35", "location": "Salle Agnès Varda", "category": "Next-Day Screening", "gala": false, "abs_s": 2760, "abs_e": 2915}, {"id": 93, "day": "22", "start": "08:30", "title": "COWARD", "director": "Lukas Dhont", "dur": "2h00", "location": "Salle Agnès Varda", "category": "Next-Day Screening", "gala": false, "abs_s": 3390, "abs_e": 3510}, {"id": 94, "day": "22", "start": "08:30", "title": "LA BOLA NEGRA", "director": "Javier Calvo & Javier Ambrossi", "dur": "2h35", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": false, "abs_s": 3390, "abs_e": 3545}, {"id": 95, "day": "22", "start": "08:30", "title": "VICTORIAN PSYCHO", "director": "Zachary Wigon", "dur": "1h30", "location": "Salle Debussy", "category": "Next-Day Screening", "gala": false, "abs_s": 3390, "abs_e": 3480}, {"id": 96, "day": "22", "start": "08:45", "title": "COWARD", "director": "Lukas Dhont", "dur": "2h00", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 3405, "abs_e": 3525}, {"id": 97, "day": "22", "start": "08:45", "title": "MERCI D'ÊTRE VENU", "director": "Alain Cavalier", "dur": "1h22", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 3405, "abs_e": 3487}, {"id": 98, "day": "22", "start": "08:45", "title": "THE MAN I LOVE", "director": "Ira Sachs", "dur": "1h35", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 3405, "abs_e": 3500}, {"id": 99, "day": "22", "start": "09:15", "title": "ELEPHANTS IN THE FOG", "director": "Abinash Bikram Shah", "dur": "1h43", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 3435, "abs_e": 3538}, {"id": 100, "day": "22", "start": "09:15", "title": "UĻA", "director": "Viesturs Kairišs", "dur": "1h42", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 3435, "abs_e": 3537}, {"id": 101, "day": "22", "start": "10:30", "title": "LA DÉRIVE (THE DRIFT)", "director": "Paula Delsol", "dur": "1h23", "location": "Salle Buñuel", "category": "Cannes Classics", "gala": false, "abs_s": 3510, "abs_e": 3593}, {"id": 102, "day": "22", "start": "11:00", "title": "MAUVAISE ÉTOILE", "director": "Lola Cambourieu & Yann Berlier", "dur": "2h05", "location": "Studio 13", "category": "ACID", "gala": false, "abs_s": 3540, "abs_e": 3665}, {"id": 103, "day": "22", "start": "11:00", "title": "NOTRE SALUT", "director": "Emmanuel Marre", "dur": "2h35", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 3540, "abs_e": 3695}, {"id": 104, "day": "22", "start": "11:00", "title": "Prix Alpine: Conversation with Alice Winocour", "director": "—", "dur": "—", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": null, "abs_e": null}, {"id": 105, "day": "22", "start": "11:00", "title": "Shorts in Competition", "director": "—", "dur": "2h28", "location": "Salle Debussy", "category": "Short Films", "gala": false, "abs_s": 3540, "abs_e": 3688}, {"id": 106, "day": "22", "start": "11:15", "title": "LA BOLA NEGRA", "director": "Javier Calvo & Javier Ambrossi", "dur": "2h35", "location": "Salle Agnès Varda", "category": "Next-Day Screening", "gala": false, "abs_s": 3555, "abs_e": 3710}, {"id": 107, "day": "22", "start": "11:30", "title": "VICTORIAN PSYCHO", "director": "Zachary Wigon", "dur": "1h30", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 3570, "abs_e": 3660}, {"id": 108, "day": "22", "start": "11:45", "title": "LA BOLA NEGRA", "director": "Javier Calvo & Javier Ambrossi", "dur": "2h35", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 3585, "abs_e": 3740}, {"id": 109, "day": "22", "start": "11:45", "title": "YESTERDAY THE EYE DIDN'T SLEEP", "director": "Rakan Mayasi", "dur": "1h40", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 3585, "abs_e": 3685}, {"id": 110, "day": "22", "start": "12:00", "title": "COWARD", "director": "Lukas Dhont", "dur": "2h00", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": false, "abs_s": 3600, "abs_e": 3720}, {"id": 111, "day": "22", "start": "12:00", "title": "LES ROCHES ROUGES (RED ROCKS)", "director": "Bruno Dumont", "dur": "1h31", "location": "Olympia", "category": "Directors' Fortnight", "gala": false, "abs_s": 3600, "abs_e": 3691}, {"id": 112, "day": "22", "start": "13:15", "title": "WE ARE ALIENS", "director": "Kohei Kadowaki", "dur": "1h57", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 3675, "abs_e": 3792}, {"id": 113, "day": "22", "start": "13:45", "title": "MINOTAUR", "director": "Andreï Zviaguintsev", "dur": "2h15", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 3705, "abs_e": 3840}, {"id": 114, "day": "22", "start": "14:00", "title": "Shorts in Competition", "director": "—", "dur": "2h28", "location": "Salle Buñuel", "category": "Short Films", "gala": false, "abs_s": 3720, "abs_e": 3868}, {"id": 115, "day": "22", "start": "14:00", "title": "Shorts in Competition", "director": "—", "dur": "2h28", "location": "Salle Buñuel", "category": "Next-Day Screening", "gala": false, "abs_s": 3720, "abs_e": 3868}, {"id": 116, "day": "22", "start": "14:00", "title": "TITANIC OCEAN", "director": "Konstantina Kotzamani", "dur": "2h10", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 3720, "abs_e": 3850}, {"id": 117, "day": "22", "start": "14:15", "title": "LA BATAILLE DE GAULLE : L'ÂGE DE FER", "director": "Antonin Baudry", "dur": "2h40", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 3735, "abs_e": 3895}, {"id": 118, "day": "22", "start": "14:30", "title": "THE END OF IT", "director": "Maria Martínez Bayona", "dur": "1h42", "location": "Salle Agnès Varda", "category": "Next-Day Screening", "gala": false, "abs_s": 3750, "abs_e": 3852}, {"id": 119, "day": "22", "start": "15:00", "title": "DAS GETRÄUMTE ABENTEUER", "director": "Valeska Grisebach", "dur": "2h47", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": false, "abs_s": 3780, "abs_e": 3947}, {"id": 120, "day": "22", "start": "15:15", "title": "THE END OF IT", "director": "Maria Martínez Bayona", "dur": "1h42", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 3795, "abs_e": 3897}, {"id": 121, "day": "22", "start": "16:00", "title": "ATONEMENT (L'APAISEMENT)", "director": "Reed Van Dyk", "dur": "1h58", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 3840, "abs_e": 3958}, {"id": 122, "day": "22", "start": "16:30", "title": "AMARGA NAVIDAD", "director": "Pedro Almodóvar", "dur": "1h52", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 3870, "abs_e": 3982}, {"id": 123, "day": "22", "start": "16:30", "title": "VESNA", "director": "Rostislav Kirpičenko", "dur": "1h33", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 3870, "abs_e": 3963}, {"id": 124, "day": "22", "start": "16:30", "title": "VIRAGES (SUMMER DRIFT)", "director": "Céline Carridroit & Aline Suter", "dur": "1h29", "location": "Alexandre III", "category": "ACID", "gala": false, "abs_s": 3870, "abs_e": 3959}, {"id": 125, "day": "22", "start": "16:45", "title": "UĻA (ULYA)", "director": "Viesturs Kairišs", "dur": "1h42", "location": "Salle Agnès Varda", "category": "Next-Day Screening", "gala": false, "abs_s": 3885, "abs_e": 3987}, {"id": 126, "day": "22", "start": "18:45", "title": "LES ROCHES ROUGES (RED ROCKS)", "director": "Bruno Dumont", "dur": "1h31", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 4005, "abs_e": 4096}, {"id": 127, "day": "22", "start": "19:00", "title": "HISTOIRES DE LA NUIT", "director": "Léa Mysius", "dur": "1h54", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": true, "abs_s": 4020, "abs_e": 4134}, {"id": 128, "day": "22", "start": "19:15", "title": "MEEUWEN STERVEN IN DE HAVEN", "director": "Rik Kuypers, Roland Verhavert & Ivo Michiels", "dur": "1h27", "location": "Salle Agnès Varda", "category": "Cannes Classics", "gala": false, "abs_s": 4035, "abs_e": 4122}, {"id": 129, "day": "22", "start": "20:00", "title": "Pierre Angénieux Tribute to Akiko Ashizawa", "director": "—", "dur": "1h15", "location": "Salle Buñuel", "category": "Cannes Classics", "gala": false, "abs_s": 4080, "abs_e": 4155}, {"id": 130, "day": "22", "start": "20:15", "title": "ULYSSE — UCR Closing", "director": "Laetitia Masson", "dur": "1h37", "location": "Salle Debussy", "category": "Un Certain Regard", "gala": false, "abs_s": 4095, "abs_e": 4192}, {"id": 131, "day": "22", "start": "20:30", "title": "9 TEMPLES TO HEAVEN", "director": "Sompot Chidgasornpongse", "dur": "2h20", "location": "Olympia", "category": "Directors' Fortnight", "gala": false, "abs_s": 4110, "abs_e": 4250}, {"id": 132, "day": "22", "start": "21:00", "title": "BUTTERFLY JAM", "director": "Kantemir Balagov", "dur": "1h42", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 4140, "abs_e": 4242}, {"id": 133, "day": "22", "start": "22:00", "title": "L'OBJET DU DÉLIT (CRESCENDO)", "director": "Agnès Jaoui", "dur": "2h13", "location": "Grand Théâtre Lumière", "category": "Special Screening", "gala": true, "abs_s": 4200, "abs_e": 4333}, {"id": 134, "day": "23", "start": "08:45", "title": "COWARD", "director": "Lukas Dhont", "dur": "2h00", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 4845, "abs_e": 4965}, {"id": 135, "day": "23", "start": "08:45", "title": "HISTOIRES DE LA NUIT", "director": "Léa Mysius", "dur": "1h54", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 4845, "abs_e": 4959}, {"id": 136, "day": "23", "start": "09:15", "title": "THE MAN I LOVE", "director": "Ira Sachs", "dur": "1h35", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 4875, "abs_e": 4970}, {"id": 137, "day": "23", "start": "09:15", "title": "UĻA", "director": "Viesturs Kairišs", "dur": "1h42", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 4875, "abs_e": 4977}, {"id": 138, "day": "23", "start": "11:30", "title": "LA BOLA NEGRA", "director": "Javier Calvo & Javier Ambrossi", "dur": "2h35", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 5010, "abs_e": 5165}, {"id": 139, "day": "23", "start": "11:30", "title": "VICTORIAN PSYCHO", "director": "Zachary Wigon", "dur": "1h30", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 5010, "abs_e": 5100}, {"id": 140, "day": "23", "start": "11:45", "title": "DAS GETRÄUMTE ABENTEUER", "director": "Valeska Grisebach", "dur": "2h47", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 5025, "abs_e": 5192}, {"id": 141, "day": "23", "start": "11:45", "title": "NOTRE SALUT", "director": "Emmanuel Marre", "dur": "2h35", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 5025, "abs_e": 5180}, {"id": 142, "day": "23", "start": "13:45", "title": "THE END OF IT", "director": "Maria Martínez Bayona", "dur": "1h42", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 5145, "abs_e": 5247}, {"id": 143, "day": "23", "start": "14:45", "title": "ULYSSE", "director": "Laetitia Masson", "dur": "1h37", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 5205, "abs_e": 5302}, {"id": 144, "day": "23", "start": "15:00", "title": "L'OBJET DU DÉLIT", "director": "Agnès Jaoui", "dur": "2h13", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 5220, "abs_e": 5353}, {"id": 145, "day": "23", "start": "20:15", "title": "Closing Ceremony", "director": "—", "dur": "—", "location": "Grand Théâtre Lumière", "category": "Ceremony", "gala": true, "abs_s": null, "abs_e": null}];
-const travel = {"Grand Théâtre Lumière": {"Grand Théâtre Lumière": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Salle Debussy": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Buñuel": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Agnès Varda": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Bazin": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum IMAX": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Aurore": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Screen X": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Salle 3": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Théâtre Croisette / JW Marriott": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Espace Miramar": {"walk": 11, "scoot": 6, "shuttle": 11, "km": 0.92}, "Olympia": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.22}, "Alexandre III": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.58}, "Le Raimu": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.59}, "Les Arcades": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.27}, "Studio 13": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.85}}, "Salle Debussy": {"Grand Théâtre Lumière": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Debussy": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Salle Buñuel": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Agnès Varda": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Bazin": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum IMAX": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Aurore": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Screen X": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Salle 3": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Théâtre Croisette / JW Marriott": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Espace Miramar": {"walk": 11, "scoot": 6, "shuttle": 11, "km": 0.92}, "Olympia": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.22}, "Alexandre III": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.58}, "Le Raimu": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.59}, "Les Arcades": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.27}, "Studio 13": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.85}}, "Salle Buñuel": {"Grand Théâtre Lumière": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Debussy": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Buñuel": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Salle Agnès Varda": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Bazin": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum IMAX": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Aurore": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Screen X": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Salle 3": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Théâtre Croisette / JW Marriott": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Espace Miramar": {"walk": 11, "scoot": 6, "shuttle": 11, "km": 0.92}, "Olympia": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.22}, "Alexandre III": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.58}, "Le Raimu": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.59}, "Les Arcades": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.27}, "Studio 13": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.85}}, "Salle Agnès Varda": {"Grand Théâtre Lumière": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Debussy": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Buñuel": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Agnès Varda": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Salle Bazin": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum IMAX": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Aurore": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Screen X": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Salle 3": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Théâtre Croisette / JW Marriott": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Espace Miramar": {"walk": 11, "scoot": 6, "shuttle": 11, "km": 0.92}, "Olympia": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.22}, "Alexandre III": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.58}, "Le Raimu": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.59}, "Les Arcades": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.27}, "Studio 13": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.85}}, "Salle Bazin": {"Grand Théâtre Lumière": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Debussy": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Buñuel": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Agnès Varda": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Bazin": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Cineum IMAX": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Aurore": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Screen X": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Salle 3": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Théâtre Croisette / JW Marriott": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Espace Miramar": {"walk": 11, "scoot": 6, "shuttle": 11, "km": 0.92}, "Olympia": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.22}, "Alexandre III": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.58}, "Le Raimu": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.59}, "Les Arcades": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.27}, "Studio 13": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.85}}, "Cineum IMAX": {"Grand Théâtre Lumière": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Debussy": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Buñuel": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Agnès Varda": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Bazin": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum IMAX": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Cineum Aurore": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum Screen X": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum Salle 3": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Théâtre Croisette / JW Marriott": {"walk": 63, "scoot": 23, "shuttle": 63, "km": 5.29}, "Espace Miramar": {"walk": 67, "scoot": 24, "shuttle": 67, "km": 5.6}, "Olympia": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.6}, "Alexandre III": {"walk": 75, "scoot": 27, "shuttle": 75, "km": 6.23}, "Le Raimu": {"walk": 23, "scoot": 10, "shuttle": 23, "km": 1.9}, "Les Arcades": {"walk": 54, "scoot": 20, "shuttle": 54, "km": 4.49}, "Studio 13": {"walk": 52, "scoot": 19, "shuttle": 52, "km": 4.34}}, "Cineum Aurore": {"Grand Théâtre Lumière": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Debussy": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Buñuel": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Agnès Varda": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Bazin": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum IMAX": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum Aurore": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Cineum Screen X": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum Salle 3": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Théâtre Croisette / JW Marriott": {"walk": 63, "scoot": 23, "shuttle": 63, "km": 5.29}, "Espace Miramar": {"walk": 67, "scoot": 24, "shuttle": 67, "km": 5.6}, "Olympia": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.6}, "Alexandre III": {"walk": 75, "scoot": 27, "shuttle": 75, "km": 6.23}, "Le Raimu": {"walk": 23, "scoot": 10, "shuttle": 23, "km": 1.9}, "Les Arcades": {"walk": 54, "scoot": 20, "shuttle": 54, "km": 4.49}, "Studio 13": {"walk": 52, "scoot": 19, "shuttle": 52, "km": 4.34}}, "Cineum Screen X": {"Grand Théâtre Lumière": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Debussy": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Buñuel": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Agnès Varda": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Bazin": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum IMAX": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum Aurore": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum Screen X": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Cineum Salle 3": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Théâtre Croisette / JW Marriott": {"walk": 63, "scoot": 23, "shuttle": 63, "km": 5.29}, "Espace Miramar": {"walk": 67, "scoot": 24, "shuttle": 67, "km": 5.6}, "Olympia": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.6}, "Alexandre III": {"walk": 75, "scoot": 27, "shuttle": 75, "km": 6.23}, "Le Raimu": {"walk": 23, "scoot": 10, "shuttle": 23, "km": 1.9}, "Les Arcades": {"walk": 54, "scoot": 20, "shuttle": 54, "km": 4.49}, "Studio 13": {"walk": 52, "scoot": 19, "shuttle": 52, "km": 4.34}}, "Cineum Salle 3": {"Grand Théâtre Lumière": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Debussy": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Buñuel": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Agnès Varda": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Bazin": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum IMAX": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum Aurore": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum Screen X": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum Salle 3": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Théâtre Croisette / JW Marriott": {"walk": 63, "scoot": 23, "shuttle": 63, "km": 5.29}, "Espace Miramar": {"walk": 67, "scoot": 24, "shuttle": 67, "km": 5.6}, "Olympia": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.6}, "Alexandre III": {"walk": 75, "scoot": 27, "shuttle": 75, "km": 6.23}, "Le Raimu": {"walk": 23, "scoot": 10, "shuttle": 23, "km": 1.9}, "Les Arcades": {"walk": 54, "scoot": 20, "shuttle": 54, "km": 4.49}, "Studio 13": {"walk": 52, "scoot": 19, "shuttle": 52, "km": 4.34}}, "Théâtre Croisette / JW Marriott": {"Grand Théâtre Lumière": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Salle Debussy": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Salle Buñuel": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Salle Agnès Varda": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Salle Bazin": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Cineum IMAX": {"walk": 63, "scoot": 23, "shuttle": 63, "km": 5.29}, "Cineum Aurore": {"walk": 63, "scoot": 23, "shuttle": 63, "km": 5.29}, "Cineum Screen X": {"walk": 63, "scoot": 23, "shuttle": 63, "km": 5.29}, "Cineum Salle 3": {"walk": 63, "scoot": 23, "shuttle": 63, "km": 5.29}, "Théâtre Croisette / JW Marriott": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Espace Miramar": {"walk": 4, "scoot": 3, "shuttle": 4, "km": 0.32}, "Olympia": {"walk": 9, "scoot": 5, "shuttle": 9, "km": 0.75}, "Alexandre III": {"walk": 12, "scoot": 6, "shuttle": 12, "km": 0.99}, "Le Raimu": {"walk": 62, "scoot": 23, "shuttle": 62, "km": 5.17}, "Les Arcades": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.84}, "Studio 13": {"walk": 16, "scoot": 7, "shuttle": 16, "km": 1.31}}, "Espace Miramar": {"Grand Théâtre Lumière": {"walk": 11, "scoot": 6, "shuttle": 11, "km": 0.92}, "Salle Debussy": {"walk": 11, "scoot": 6, "shuttle": 11, "km": 0.92}, "Salle Buñuel": {"walk": 11, "scoot": 6, "shuttle": 11, "km": 0.92}, "Salle Agnès Varda": {"walk": 11, "scoot": 6, "shuttle": 11, "km": 0.92}, "Salle Bazin": {"walk": 11, "scoot": 6, "shuttle": 11, "km": 0.92}, "Cineum IMAX": {"walk": 67, "scoot": 24, "shuttle": 67, "km": 5.6}, "Cineum Aurore": {"walk": 67, "scoot": 24, "shuttle": 67, "km": 5.6}, "Cineum Screen X": {"walk": 67, "scoot": 24, "shuttle": 67, "km": 5.6}, "Cineum Salle 3": {"walk": 67, "scoot": 24, "shuttle": 67, "km": 5.6}, "Théâtre Croisette / JW Marriott": {"walk": 4, "scoot": 3, "shuttle": 4, "km": 0.32}, "Espace Miramar": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Olympia": {"walk": 13, "scoot": 6, "shuttle": 13, "km": 1.07}, "Alexandre III": {"walk": 8, "scoot": 5, "shuttle": 8, "km": 0.68}, "Le Raimu": {"walk": 66, "scoot": 24, "shuttle": 66, "km": 5.49}, "Les Arcades": {"walk": 14, "scoot": 7, "shuttle": 14, "km": 1.16}, "Studio 13": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.61}}, "Olympia": {"Grand Théâtre Lumière": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.22}, "Salle Debussy": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.22}, "Salle Buñuel": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.22}, "Salle Agnès Varda": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.22}, "Salle Bazin": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.22}, "Cineum IMAX": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.6}, "Cineum Aurore": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.6}, "Cineum Screen X": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.6}, "Cineum Salle 3": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.6}, "Théâtre Croisette / JW Marriott": {"walk": 9, "scoot": 5, "shuttle": 9, "km": 0.75}, "Espace Miramar": {"walk": 13, "scoot": 6, "shuttle": 13, "km": 1.07}, "Olympia": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Alexandre III": {"walk": 21, "scoot": 9, "shuttle": 21, "km": 1.75}, "Le Raimu": {"walk": 53, "scoot": 20, "shuttle": 53, "km": 4.41}, "Les Arcades": {"walk": 1, "scoot": 2, "shuttle": 1, "km": 0.1}, "Studio 13": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.62}}, "Alexandre III": {"Grand Théâtre Lumière": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.58}, "Salle Debussy": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.58}, "Salle Buñuel": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.58}, "Salle Agnès Varda": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.58}, "Salle Bazin": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.58}, "Cineum IMAX": {"walk": 75, "scoot": 27, "shuttle": 75, "km": 6.23}, "Cineum Aurore": {"walk": 75, "scoot": 27, "shuttle": 75, "km": 6.23}, "Cineum Screen X": {"walk": 75, "scoot": 27, "shuttle": 75, "km": 6.23}, "Cineum Salle 3": {"walk": 75, "scoot": 27, "shuttle": 75, "km": 6.23}, "Théâtre Croisette / JW Marriott": {"walk": 12, "scoot": 6, "shuttle": 12, "km": 0.99}, "Espace Miramar": {"walk": 8, "scoot": 5, "shuttle": 8, "km": 0.68}, "Olympia": {"walk": 21, "scoot": 9, "shuttle": 21, "km": 1.75}, "Alexandre III": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Le Raimu": {"walk": 74, "scoot": 27, "shuttle": 74, "km": 6.16}, "Les Arcades": {"walk": 22, "scoot": 9, "shuttle": 22, "km": 1.84}, "Studio 13": {"walk": 27, "scoot": 11, "shuttle": 27, "km": 2.28}}, "Le Raimu": {"Grand Théâtre Lumière": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.59}, "Salle Debussy": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.59}, "Salle Buñuel": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.59}, "Salle Agnès Varda": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.59}, "Salle Bazin": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.59}, "Cineum IMAX": {"walk": 23, "scoot": 10, "shuttle": 23, "km": 1.9}, "Cineum Aurore": {"walk": 23, "scoot": 10, "shuttle": 23, "km": 1.9}, "Cineum Screen X": {"walk": 23, "scoot": 10, "shuttle": 23, "km": 1.9}, "Cineum Salle 3": {"walk": 23, "scoot": 10, "shuttle": 23, "km": 1.9}, "Théâtre Croisette / JW Marriott": {"walk": 62, "scoot": 23, "shuttle": 62, "km": 5.17}, "Espace Miramar": {"walk": 66, "scoot": 24, "shuttle": 66, "km": 5.49}, "Olympia": {"walk": 53, "scoot": 20, "shuttle": 53, "km": 4.41}, "Alexandre III": {"walk": 74, "scoot": 27, "shuttle": 74, "km": 6.16}, "Le Raimu": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Les Arcades": {"walk": 52, "scoot": 19, "shuttle": 52, "km": 4.32}, "Studio 13": {"walk": 47, "scoot": 18, "shuttle": 47, "km": 3.94}}, "Les Arcades": {"Grand Théâtre Lumière": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.27}, "Salle Debussy": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.27}, "Salle Buñuel": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.27}, "Salle Agnès Varda": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.27}, "Salle Bazin": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.27}, "Cineum IMAX": {"walk": 54, "scoot": 20, "shuttle": 54, "km": 4.49}, "Cineum Aurore": {"walk": 54, "scoot": 20, "shuttle": 54, "km": 4.49}, "Cineum Screen X": {"walk": 54, "scoot": 20, "shuttle": 54, "km": 4.49}, "Cineum Salle 3": {"walk": 54, "scoot": 20, "shuttle": 54, "km": 4.49}, "Théâtre Croisette / JW Marriott": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.84}, "Espace Miramar": {"walk": 14, "scoot": 7, "shuttle": 14, "km": 1.16}, "Olympia": {"walk": 1, "scoot": 2, "shuttle": 1, "km": 0.1}, "Alexandre III": {"walk": 22, "scoot": 9, "shuttle": 22, "km": 1.84}, "Le Raimu": {"walk": 52, "scoot": 19, "shuttle": 52, "km": 4.32}, "Les Arcades": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Studio 13": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}}, "Studio 13": {"Grand Théâtre Lumière": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.85}, "Salle Debussy": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.85}, "Salle Buñuel": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.85}, "Salle Agnès Varda": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.85}, "Salle Bazin": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.85}, "Cineum IMAX": {"walk": 52, "scoot": 19, "shuttle": 52, "km": 4.34}, "Cineum Aurore": {"walk": 52, "scoot": 19, "shuttle": 52, "km": 4.34}, "Cineum Screen X": {"walk": 52, "scoot": 19, "shuttle": 52, "km": 4.34}, "Cineum Salle 3": {"walk": 52, "scoot": 19, "shuttle": 52, "km": 4.34}, "Théâtre Croisette / JW Marriott": {"walk": 16, "scoot": 7, "shuttle": 16, "km": 1.31}, "Espace Miramar": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.61}, "Olympia": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.62}, "Alexandre III": {"walk": 27, "scoot": 11, "shuttle": 27, "km": 2.28}, "Le Raimu": {"walk": 47, "scoot": 18, "shuttle": 47, "km": 3.94}, "Les Arcades": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Studio 13": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}}};
-const catColors = {"Compétition": "#c0392b", "Un Certain Regard": "#8e44ad", "Cannes Première": "#16a085", "Special Screening": "#d35400", "Midnight Screening": "#2c3e50", "Cannes Classics": "#b8860b", "Rendez-vous": "#2980b9", "Next-Day Screening": "#7f8c8d", "Selection Rerun": "#95a5a6", "Directors' Fortnight": "#27ae60", "Critics' Week": "#e91e63", "ACID": "#e67e22", "La CINEF": "#9b59b6", "Short Films": "#34495e", "Ceremony": "#c0392b"};
+const events = [{"id": 0, "day": "20", "start": "00:30", "title": "ROMA ELASTICA", "director": "Bertrand Mandico", "dur": "1h47", "location": "Grand Théâtre Lumière", "category": "Midnight Screening", "gala": false, "abs_s": 30, "abs_e": 137}, {"id": 1, "day": "20", "start": "08:30", "title": "LE CORSET (IRON BOY)", "director": "Louis Clichy", "dur": "1h29", "location": "Salle Debussy", "category": "Next-Day Screening", "gala": false, "abs_s": 510, "abs_e": 599}, {"id": 2, "day": "20", "start": "08:30", "title": "MINOTAUR", "director": "Andreï Zviaguintsev", "dur": "2h15", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": false, "abs_s": 510, "abs_e": 645}, {"id": 3, "day": "20", "start": "08:45", "title": "I SEE BUILDINGS FALL LIKE LIGHTNING", "director": "Clio Barnard", "dur": "1h49", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 525, "abs_e": 634}, {"id": 4, "day": "20", "start": "08:45", "title": "L'INCONNUE", "director": "Arthur Harari", "dur": "2h19", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 525, "abs_e": 664}, {"id": 5, "day": "20", "start": "08:45", "title": "MINOTAUR", "director": "Andreï Zviaguintsev", "dur": "2h15", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 525, "abs_e": 660}, {"id": 6, "day": "20", "start": "08:45", "title": "SEIS MESES EN EL EDIFICIO ROSA CON AZUL", "director": "Bruno Santamaría Razo", "dur": "1h45", "location": "Espace Miramar", "category": "Critics' Week", "gala": false, "abs_s": 525, "abs_e": 630}, {"id": 7, "day": "20", "start": "09:15", "title": "BEN'IMANA", "director": "Marie-Clémentine Dusabejambo", "dur": "1h36", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 555, "abs_e": 651}, {"id": 8, "day": "20", "start": "09:15", "title": "EVERYTIME", "director": "Sandra Wollner", "dur": "2h01", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 555, "abs_e": 676}, {"id": 9, "day": "20", "start": "11:00", "title": "CŒUR SECRET (A SECRET HEART)", "director": "Tom Fontenille", "dur": "1h28", "location": "Studio 13", "category": "ACID", "gala": false, "abs_s": 660, "abs_e": 748}, {"id": 10, "day": "20", "start": "11:00", "title": "ELEPHANTS IN THE FOG", "director": "Abinash Bikram Shah", "dur": "1h43", "location": "Salle Debussy", "category": "Un Certain Regard", "gala": false, "abs_s": 660, "abs_e": 763}, {"id": 11, "day": "20", "start": "11:30", "title": "ADIEU MONDE CRUEL", "director": "Félix de Givry", "dur": "1h33", "location": "Espace Miramar", "category": "Critics' Week", "gala": false, "abs_s": 690, "abs_e": 783}, {"id": 12, "day": "20", "start": "11:30", "title": "LA PERRA", "director": "Dominga Sotomayor", "dur": "1h52", "location": "Les Arcades", "category": "Directors' Fortnight", "gala": false, "abs_s": 690, "abs_e": 802}, {"id": 13, "day": "20", "start": "11:30", "title": "LE CORSET (IRON BOY)", "director": "Louis Clichy", "dur": "1h29", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 690, "abs_e": 779}, {"id": 14, "day": "20", "start": "11:45", "title": "AMARGA NAVIDAD", "director": "Pedro Almodóvar", "dur": "1h52", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": false, "abs_s": 705, "abs_e": 817}, {"id": 15, "day": "20", "start": "11:45", "title": "AMARGA NAVIDAD", "director": "Pedro Almodóvar", "dur": "1h52", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 705, "abs_e": 817}, {"id": 16, "day": "20", "start": "11:45", "title": "FJORD", "director": "Cristian Mungiu", "dur": "2h26", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 705, "abs_e": 851}, {"id": 17, "day": "20", "start": "11:50", "title": "LA MÁS DULCE", "director": "Laïla Marrakchi", "dur": "1h41", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 710, "abs_e": 811}, {"id": 18, "day": "20", "start": "12:00", "title": "DEATH HAS NO MASTER", "director": "Jorge Thielen Armand", "dur": "1h44", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 720, "abs_e": 824}, {"id": 19, "day": "20", "start": "14:00", "title": "MOULIN", "director": "László Nemes", "dur": "2h10", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 840, "abs_e": 970}, {"id": 20, "day": "20", "start": "14:00", "title": "YESTERDAY THE EYE DIDN'T SLEEP", "director": "Rakan Mayasi", "dur": "1h40", "location": "Salle Debussy", "category": "Un Certain Regard", "gala": false, "abs_s": 840, "abs_e": 940}, {"id": 21, "day": "20", "start": "14:15", "title": "DIAMOND", "director": "Andy Garcia", "dur": "1h58", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 855, "abs_e": 973}, {"id": 22, "day": "20", "start": "14:15", "title": "LUCY LOST", "director": "Olivier Clert", "dur": "1h25", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 855, "abs_e": 940}, {"id": 23, "day": "20", "start": "14:45", "title": "LE TRIANGLE D'OR", "director": "Hélène Rosselet-Ruiz", "dur": "1h30", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 885, "abs_e": 975}, {"id": 24, "day": "20", "start": "15:00", "title": "LES ROCHES ROUGES (RED ROCKS)", "director": "Bruno Dumont", "dur": "1h31", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 900, "abs_e": 991}, {"id": 25, "day": "20", "start": "15:00", "title": "NOTRE SALUT", "director": "Emmanuel Marre", "dur": "2h35", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": false, "abs_s": 900, "abs_e": 1055}, {"id": 26, "day": "20", "start": "16:30", "title": "BLAISE", "director": "Dimitri Planchon & Jean-Paul Guigue", "dur": "1h22", "location": "Alexandre III", "category": "ACID", "gala": false, "abs_s": 990, "abs_e": 1072}, {"id": 27, "day": "20", "start": "16:30", "title": "HER PRIVATE HELL", "director": "Nicolas Winding Refn", "dur": "1h49", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 990, "abs_e": 1099}, {"id": 28, "day": "20", "start": "16:30", "title": "LA SYMPHONIE PASTORALE", "director": "Jean Delannoy", "dur": "1h37", "location": "Salle Buñuel", "category": "Cannes Classics", "gala": false, "abs_s": 990, "abs_e": 1087}, {"id": 29, "day": "20", "start": "16:30", "title": "TITANIC OCEAN", "director": "Konstantina Kotzamani", "dur": "2h10", "location": "Salle Debussy", "category": "Un Certain Regard", "gala": false, "abs_s": 990, "abs_e": 1120}, {"id": 30, "day": "20", "start": "16:45", "title": "HOPE", "director": "Na Hong-jin", "dur": "2h40", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 1005, "abs_e": 1165}, {"id": 31, "day": "20", "start": "16:45", "title": "KOKUROJO (LE CHÂTEAU D'ARIOKA)", "director": "Kurosawa Kiyoshi", "dur": "2h27", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 1005, "abs_e": 1152}, {"id": 32, "day": "20", "start": "17:00", "title": "GARANCE", "director": "Jeanne Herry", "dur": "2h00", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 1020, "abs_e": 1140}, {"id": 33, "day": "20", "start": "18:30", "title": "I SEE BUILDINGS FALL LIKE LIGHTNING", "director": "Clio Barnard", "dur": "1h49", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 1110, "abs_e": 1219}, {"id": 34, "day": "20", "start": "18:45", "title": "BEN'IMANA", "director": "Marie-Clémentine Dusabejambo", "dur": "1h36", "location": "Salle Bazin", "category": "Next-Day Screening", "gala": false, "abs_s": 1125, "abs_e": 1221}, {"id": 35, "day": "20", "start": "18:45", "title": "LA BATAILLE DE GAULLE : L'ÂGE DE FER", "director": "Antonin Baudry", "dur": "2h40", "location": "Grand Théâtre Lumière", "category": "Special Screening", "gala": true, "abs_s": 1125, "abs_e": 1285}, {"id": 36, "day": "20", "start": "19:00", "title": "DERNSIE: THE AMAZING LIFE OF BRUCE DERN", "director": "Mike Mendez", "dur": "1h51", "location": "Salle Buñuel", "category": "Cannes Classics", "gala": false, "abs_s": 1140, "abs_e": 1251}, {"id": 37, "day": "20", "start": "19:30", "title": "MARIAGE AU GOÛT D'ORANGE", "director": "Christophe Honoré", "dur": "1h55", "location": "Salle Debussy", "category": "Cannes Première", "gala": false, "abs_s": 1170, "abs_e": 1285}, {"id": 38, "day": "20", "start": "19:45", "title": "LES SURVIVANTS DU CHE", "director": "Christophe Dimitri Réveille", "dur": "1h38", "location": "Salle Agnès Varda", "category": "Special Screening", "gala": false, "abs_s": 1185, "abs_e": 1283}, {"id": 39, "day": "20", "start": "20:00", "title": "CŒUR SECRET (A SECRET HEART)", "director": "Tom Fontenille", "dur": "1h28", "location": "Les Arcades", "category": "ACID", "gala": false, "abs_s": 1200, "abs_e": 1288}, {"id": 40, "day": "20", "start": "20:45", "title": "ADIEU MONDE CRUEL", "director": "Félix de Givry", "dur": "1h33", "location": "Espace Miramar", "category": "Critics' Week", "gala": false, "abs_s": 1245, "abs_e": 1338}, {"id": 41, "day": "20", "start": "21:00", "title": "KOKUROJO (LE CHÂTEAU D'ARIOKA)", "director": "Kurosawa Kiyoshi", "dur": "2h27", "location": "Salle Agnès Varda", "category": "Next-Day Screening", "gala": false, "abs_s": 1260, "abs_e": 1407}, {"id": 42, "day": "20", "start": "21:15", "title": "DEATH HAS NO MASTER", "director": "Jorge Thielen Armand", "dur": "1h44", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 1275, "abs_e": 1379}, {"id": 43, "day": "20", "start": "21:30", "title": "CRÍA CUERVOS", "director": "Carlos Saura", "dur": "1h45", "location": "Plage Macé", "category": "Cinéma de la Plage", "gala": false, "abs_s": 1290, "abs_e": 1395}, {"id": 44, "day": "20", "start": "22:30", "title": "LOW EXPECTATIONS", "director": "Eivind Landsvik", "dur": "1h45", "location": "Les Arcades", "category": "Directors' Fortnight", "gala": false, "abs_s": 1350, "abs_e": 1455}, {"id": 45, "day": "20", "start": "22:30", "title": "THE MAN I LOVE", "director": "Ira Sachs", "dur": "1h35", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": true, "abs_s": 1350, "abs_e": 1445}, {"id": 46, "day": "21", "start": "08:30", "title": "THE MAN I LOVE", "director": "Ira Sachs", "dur": "1h35", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": false, "abs_s": 1950, "abs_e": 2045}, {"id": 47, "day": "21", "start": "08:30", "title": "YESTERDAY THE EYE DIDN'T SLEEP", "director": "Rakan Mayasi", "dur": "1h40", "location": "Salle Debussy", "category": "Next-Day Screening", "gala": false, "abs_s": 1950, "abs_e": 2050}, {"id": 48, "day": "21", "start": "08:45", "title": "LE VERTIGE (VERTIGINOUS)", "director": "Quentin Dupieux", "dur": "1h07", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 1965, "abs_e": 2032}, {"id": 49, "day": "21", "start": "08:45", "title": "MINOTAUR", "director": "Andreï Zviaguintsev", "dur": "2h15", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 1965, "abs_e": 2100}, {"id": 50, "day": "21", "start": "08:45", "title": "THE MAN I LOVE", "director": "Ira Sachs", "dur": "1h35", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 1965, "abs_e": 2060}, {"id": 51, "day": "21", "start": "09:00", "title": "Invitation Next Step Studio Indonesia (Shorts)", "director": "—", "dur": "1h01", "location": "Espace Miramar", "category": "Critics' Week", "gala": false, "abs_s": 1980, "abs_e": 2041}, {"id": 52, "day": "21", "start": "09:15", "title": "BEN'IMANA", "director": "Marie-Clémentine Dusabejambo", "dur": "1h36", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 1995, "abs_e": 2091}, {"id": 53, "day": "21", "start": "09:15", "title": "ROMA ELASTICA", "director": "Bertrand Mandico", "dur": "1h47", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 1995, "abs_e": 2102}, {"id": 54, "day": "21", "start": "11:00", "title": "LIVING TWICE, DYING THRICE", "director": "Karim Lakzadeh", "dur": "1h43", "location": "Studio 13", "category": "ACID", "gala": false, "abs_s": 2100, "abs_e": 2203}, {"id": 55, "day": "21", "start": "11:00", "title": "La CINEF Selection — Programme 4", "director": "—", "dur": "1h15", "location": "Salle Buñuel", "category": "La CINEF", "gala": false, "abs_s": 2100, "abs_e": 2175}, {"id": 56, "day": "21", "start": "11:00", "title": "NOTRE SALUT", "director": "Emmanuel Marre", "dur": "2h35", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": false, "abs_s": 2100, "abs_e": 2255}, {"id": 57, "day": "21", "start": "11:00", "title": "NOTRE SALUT", "director": "Emmanuel Marre", "dur": "2h35", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 2100, "abs_e": 2255}, {"id": 58, "day": "21", "start": "11:00", "title": "Prix Découverte Sony & Grand Prix Ami Paris", "director": "—", "dur": "—", "location": "Espace Miramar", "category": "Critics' Week", "gala": false, "abs_s": null, "abs_e": null}, {"id": 59, "day": "21", "start": "11:00", "title": "UĻA (ULYA)", "director": "Viesturs Kairišs", "dur": "1h42", "location": "Salle Debussy", "category": "Un Certain Regard", "gala": false, "abs_s": 2100, "abs_e": 2202}, {"id": 60, "day": "21", "start": "11:30", "title": "LE CORSET (IRON BOY)", "director": "Louis Clichy", "dur": "1h29", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 2130, "abs_e": 2219}, {"id": 61, "day": "21", "start": "11:30", "title": "Shorts Programme 1 — Fortnight", "director": "—", "dur": "1h44", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 2130, "abs_e": 2234}, {"id": 62, "day": "21", "start": "11:45", "title": "AMARGA NAVIDAD", "director": "Pedro Almodóvar", "dur": "1h52", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 2145, "abs_e": 2257}, {"id": 63, "day": "21", "start": "11:45", "title": "ELEPHANTS IN THE FOG", "director": "Abinash Bikram Shah", "dur": "1h43", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 2145, "abs_e": 2248}, {"id": 64, "day": "21", "start": "12:00", "title": "I SEE BUILDINGS FALL LIKE LIGHTNING", "director": "Clio Barnard", "dur": "1h49", "location": "Olympia", "category": "Directors' Fortnight", "gala": false, "abs_s": 2160, "abs_e": 2269}, {"id": 65, "day": "21", "start": "13:45", "title": "LES SURVIVANTS DU CHE", "director": "Christophe Dimitri Réveille", "dur": "1h38", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 2265, "abs_e": 2363}, {"id": 66, "day": "21", "start": "14:00", "title": "MARIAGE AU GOÛT D'ORANGE", "director": "Christophe Honoré", "dur": "1h55", "location": "Salle Agnès Varda", "category": "Next-Day Screening", "gala": false, "abs_s": 2280, "abs_e": 2395}, {"id": 67, "day": "21", "start": "14:00", "title": "VICTORIAN PSYCHO", "director": "Zachary Wigon", "dur": "1h30", "location": "Salle Debussy", "category": "Un Certain Regard", "gala": false, "abs_s": 2280, "abs_e": 2370}, {"id": 68, "day": "21", "start": "14:15", "title": "DIAMOND", "director": "Andy Garcia", "dur": "1h58", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 2295, "abs_e": 2413}, {"id": 69, "day": "21", "start": "14:15", "title": "LA BATAILLE DE GAULLE : L'ÂGE DE FER", "director": "Antonin Baudry", "dur": "2h40", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 2295, "abs_e": 2455}, {"id": 70, "day": "21", "start": "14:15", "title": "YESTERDAY THE EYE DIDN'T SLEEP", "director": "Rakan Mayasi", "dur": "1h40", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 2295, "abs_e": 2395}, {"id": 71, "day": "21", "start": "14:30", "title": "Rendez-vous with Tilda Swinton", "director": "—", "dur": "1h30", "location": "Salle Buñuel", "category": "Rendez-vous", "gala": false, "abs_s": 2310, "abs_e": 2400}, {"id": 72, "day": "21", "start": "14:30", "title": "TITANIC OCEAN", "director": "Konstantina Kotzamani", "dur": "2h10", "location": "Salle Bazin", "category": "Next-Day Screening", "gala": false, "abs_s": 2310, "abs_e": 2440}, {"id": 73, "day": "21", "start": "15:00", "title": "Invitation: Festival International de Morelia", "director": "—", "dur": "1h12", "location": "Espace Miramar", "category": "Critics' Week", "gala": false, "abs_s": 2340, "abs_e": 2412}, {"id": 74, "day": "21", "start": "15:00", "title": "Shorts Programme 2 — Fortnight", "director": "—", "dur": "1h49", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 2340, "abs_e": 2449}, {"id": 75, "day": "21", "start": "15:00", "title": "THE MAN I LOVE", "director": "Ira Sachs", "dur": "1h35", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": false, "abs_s": 2340, "abs_e": 2435}, {"id": 76, "day": "21", "start": "16:00", "title": "TITANIC OCEAN", "director": "Konstantina Kotzamani", "dur": "2h10", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 2400, "abs_e": 2530}, {"id": 77, "day": "21", "start": "16:30", "title": "DANS LA GUEULE DE L'OGRE", "director": "Mahsa Karampour", "dur": "1h26", "location": "Alexandre III", "category": "ACID", "gala": false, "abs_s": 2430, "abs_e": 2516}, {"id": 78, "day": "21", "start": "16:30", "title": "L'INCONNUE", "director": "Arthur Harari", "dur": "2h19", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 2430, "abs_e": 2569}, {"id": 79, "day": "21", "start": "16:45", "title": "FJORD", "director": "Cristian Mungiu", "dur": "2h26", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 2445, "abs_e": 2591}, {"id": 80, "day": "21", "start": "17:15", "title": "MARIAGE AU GOÛT D'ORANGE", "director": "Christophe Honoré", "dur": "1h55", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 2475, "abs_e": 2590}, {"id": 81, "day": "21", "start": "17:15", "title": "Talents Adami | Shorts", "director": "—", "dur": "1h00", "location": "Espace Miramar", "category": "Critics' Week", "gala": false, "abs_s": 2475, "abs_e": 2535}, {"id": 82, "day": "21", "start": "18:00", "title": "LA BOLA NEGRA", "director": "Javier Calvo & Javier Ambrossi", "dur": "2h35", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": true, "abs_s": 2520, "abs_e": 2675}, {"id": 83, "day": "21", "start": "18:00", "title": "Palmarès La CINEF", "director": "—", "dur": "—", "location": "Salle Buñuel", "category": "La CINEF", "gala": false, "abs_s": null, "abs_e": null}, {"id": 84, "day": "21", "start": "19:00", "title": "LE VERTIGE (Closing)", "director": "Quentin Dupieux", "dur": "1h07", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 2580, "abs_e": 2647}, {"id": 85, "day": "21", "start": "19:00", "title": "LIVING TWICE, DYING THRICE", "director": "Karim Lakzadeh", "dur": "1h43", "location": "Le Raimu", "category": "ACID", "gala": false, "abs_s": 2580, "abs_e": 2683}, {"id": 86, "day": "21", "start": "19:30", "title": "THE END OF IT", "director": "Maria Martínez Bayona", "dur": "1h42", "location": "Salle Debussy", "category": "Cannes Première", "gala": false, "abs_s": 2610, "abs_e": 2712}, {"id": 87, "day": "21", "start": "20:00", "title": "LIVING TWICE, DYING THRICE", "director": "Karim Lakzadeh", "dur": "1h43", "location": "Olympia", "category": "ACID", "gala": false, "abs_s": 2640, "abs_e": 2743}, {"id": 88, "day": "21", "start": "20:00", "title": "Prix Fondation Gan à la Diffusion", "director": "—", "dur": "—", "location": "Espace Miramar", "category": "Critics' Week", "gala": false, "abs_s": null, "abs_e": null}, {"id": 89, "day": "21", "start": "20:15", "title": "ELEPHANTS IN THE FOG", "director": "Abinash Bikram Shah", "dur": "1h43", "location": "Salle Bazin", "category": "Next-Day Screening", "gala": false, "abs_s": 2655, "abs_e": 2758}, {"id": 90, "day": "21", "start": "20:30", "title": "DEATH HAS NO MASTER", "director": "Jorge Thielen Armand", "dur": "1h44", "location": "Olympia", "category": "Directors' Fortnight", "gala": false, "abs_s": 2670, "abs_e": 2774}, {"id": 91, "day": "21", "start": "21:30", "title": "SIGNORE & SIGNORI (Ces Messieurs Dames)", "director": "Pietro Germi", "dur": "2h00", "location": "Plage Macé", "category": "Cinéma de la Plage", "gala": false, "abs_s": 2730, "abs_e": 2850}, {"id": 92, "day": "21", "start": "21:45", "title": "LE VERTIGE (VERTIGINOUS)", "director": "Quentin Dupieux", "dur": "1h07", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 2745, "abs_e": 2812}, {"id": 93, "day": "21", "start": "22:00", "title": "COWARD", "director": "Lukas Dhont", "dur": "2h00", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": true, "abs_s": 2760, "abs_e": 2880}, {"id": 94, "day": "21", "start": "22:00", "title": "NOTRE SALUT", "director": "Emmanuel Marre", "dur": "2h35", "location": "Salle Agnès Varda", "category": "Next-Day Screening", "gala": false, "abs_s": 2760, "abs_e": 2915}, {"id": 95, "day": "22", "start": "08:30", "title": "COWARD", "director": "Lukas Dhont", "dur": "2h00", "location": "Salle Agnès Varda", "category": "Next-Day Screening", "gala": false, "abs_s": 3390, "abs_e": 3510}, {"id": 96, "day": "22", "start": "08:30", "title": "LA BOLA NEGRA", "director": "Javier Calvo & Javier Ambrossi", "dur": "2h35", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": false, "abs_s": 3390, "abs_e": 3545}, {"id": 97, "day": "22", "start": "08:30", "title": "VICTORIAN PSYCHO", "director": "Zachary Wigon", "dur": "1h30", "location": "Salle Debussy", "category": "Next-Day Screening", "gala": false, "abs_s": 3390, "abs_e": 3480}, {"id": 98, "day": "22", "start": "08:45", "title": "COWARD", "director": "Lukas Dhont", "dur": "2h00", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 3405, "abs_e": 3525}, {"id": 99, "day": "22", "start": "08:45", "title": "MERCI D'ÊTRE VENU", "director": "Alain Cavalier", "dur": "1h22", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 3405, "abs_e": 3487}, {"id": 100, "day": "22", "start": "08:45", "title": "THE MAN I LOVE", "director": "Ira Sachs", "dur": "1h35", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 3405, "abs_e": 3500}, {"id": 101, "day": "22", "start": "09:15", "title": "ELEPHANTS IN THE FOG", "director": "Abinash Bikram Shah", "dur": "1h43", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 3435, "abs_e": 3538}, {"id": 102, "day": "22", "start": "09:15", "title": "UĻA", "director": "Viesturs Kairišs", "dur": "1h42", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 3435, "abs_e": 3537}, {"id": 103, "day": "22", "start": "10:30", "title": "LA DÉRIVE (THE DRIFT)", "director": "Paula Delsol", "dur": "1h23", "location": "Salle Buñuel", "category": "Cannes Classics", "gala": false, "abs_s": 3510, "abs_e": 3593}, {"id": 104, "day": "22", "start": "11:00", "title": "MAUVAISE ÉTOILE", "director": "Lola Cambourieu & Yann Berlier", "dur": "2h05", "location": "Studio 13", "category": "ACID", "gala": false, "abs_s": 3540, "abs_e": 3665}, {"id": 105, "day": "22", "start": "11:00", "title": "NOTRE SALUT", "director": "Emmanuel Marre", "dur": "2h35", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 3540, "abs_e": 3695}, {"id": 106, "day": "22", "start": "11:00", "title": "Prix Alpine: Conversation with Alice Winocour", "director": "—", "dur": "—", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": null, "abs_e": null}, {"id": 107, "day": "22", "start": "11:00", "title": "Shorts in Competition", "director": "—", "dur": "2h28", "location": "Salle Debussy", "category": "Short Films", "gala": false, "abs_s": 3540, "abs_e": 3688}, {"id": 108, "day": "22", "start": "11:15", "title": "LA BOLA NEGRA", "director": "Javier Calvo & Javier Ambrossi", "dur": "2h35", "location": "Salle Agnès Varda", "category": "Next-Day Screening", "gala": false, "abs_s": 3555, "abs_e": 3710}, {"id": 109, "day": "22", "start": "11:30", "title": "VICTORIAN PSYCHO", "director": "Zachary Wigon", "dur": "1h30", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 3570, "abs_e": 3660}, {"id": 110, "day": "22", "start": "11:45", "title": "LA BOLA NEGRA", "director": "Javier Calvo & Javier Ambrossi", "dur": "2h35", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 3585, "abs_e": 3740}, {"id": 111, "day": "22", "start": "11:45", "title": "YESTERDAY THE EYE DIDN'T SLEEP", "director": "Rakan Mayasi", "dur": "1h40", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 3585, "abs_e": 3685}, {"id": 112, "day": "22", "start": "12:00", "title": "COWARD", "director": "Lukas Dhont", "dur": "2h00", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": false, "abs_s": 3600, "abs_e": 3720}, {"id": 113, "day": "22", "start": "12:00", "title": "LES ROCHES ROUGES (RED ROCKS)", "director": "Bruno Dumont", "dur": "1h31", "location": "Olympia", "category": "Directors' Fortnight", "gala": false, "abs_s": 3600, "abs_e": 3691}, {"id": 114, "day": "22", "start": "13:15", "title": "WE ARE ALIENS", "director": "Kohei Kadowaki", "dur": "1h57", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 3675, "abs_e": 3792}, {"id": 115, "day": "22", "start": "13:45", "title": "MINOTAUR", "director": "Andreï Zviaguintsev", "dur": "2h15", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 3705, "abs_e": 3840}, {"id": 116, "day": "22", "start": "14:00", "title": "Shorts in Competition", "director": "—", "dur": "2h28", "location": "Salle Buñuel", "category": "Short Films", "gala": false, "abs_s": 3720, "abs_e": 3868}, {"id": 117, "day": "22", "start": "14:00", "title": "Shorts in Competition", "director": "—", "dur": "2h28", "location": "Salle Buñuel", "category": "Next-Day Screening", "gala": false, "abs_s": 3720, "abs_e": 3868}, {"id": 118, "day": "22", "start": "14:00", "title": "TITANIC OCEAN", "director": "Konstantina Kotzamani", "dur": "2h10", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 3720, "abs_e": 3850}, {"id": 119, "day": "22", "start": "14:15", "title": "LA BATAILLE DE GAULLE : L'ÂGE DE FER", "director": "Antonin Baudry", "dur": "2h40", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 3735, "abs_e": 3895}, {"id": 120, "day": "22", "start": "14:30", "title": "THE END OF IT", "director": "Maria Martínez Bayona", "dur": "1h42", "location": "Salle Agnès Varda", "category": "Next-Day Screening", "gala": false, "abs_s": 3750, "abs_e": 3852}, {"id": 121, "day": "22", "start": "15:00", "title": "DAS GETRÄUMTE ABENTEUER", "director": "Valeska Grisebach", "dur": "2h47", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": false, "abs_s": 3780, "abs_e": 3947}, {"id": 122, "day": "22", "start": "15:15", "title": "THE END OF IT", "director": "Maria Martínez Bayona", "dur": "1h42", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 3795, "abs_e": 3897}, {"id": 123, "day": "22", "start": "16:00", "title": "ATONEMENT (L'APAISEMENT)", "director": "Reed Van Dyk", "dur": "1h58", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 3840, "abs_e": 3958}, {"id": 124, "day": "22", "start": "16:30", "title": "AMARGA NAVIDAD", "director": "Pedro Almodóvar", "dur": "1h52", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 3870, "abs_e": 3982}, {"id": 125, "day": "22", "start": "16:30", "title": "VESNA", "director": "Rostislav Kirpičenko", "dur": "1h33", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 3870, "abs_e": 3963}, {"id": 126, "day": "22", "start": "16:30", "title": "VIRAGES (SUMMER DRIFT)", "director": "Céline Carridroit & Aline Suter", "dur": "1h29", "location": "Alexandre III", "category": "ACID", "gala": false, "abs_s": 3870, "abs_e": 3959}, {"id": 127, "day": "22", "start": "16:45", "title": "UĻA (ULYA)", "director": "Viesturs Kairišs", "dur": "1h42", "location": "Salle Agnès Varda", "category": "Next-Day Screening", "gala": false, "abs_s": 3885, "abs_e": 3987}, {"id": 128, "day": "22", "start": "18:45", "title": "LES ROCHES ROUGES (RED ROCKS)", "director": "Bruno Dumont", "dur": "1h31", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 4005, "abs_e": 4096}, {"id": 129, "day": "22", "start": "19:00", "title": "HISTOIRES DE LA NUIT", "director": "Léa Mysius", "dur": "1h54", "location": "Grand Théâtre Lumière", "category": "Compétition", "gala": true, "abs_s": 4020, "abs_e": 4134}, {"id": 130, "day": "22", "start": "19:15", "title": "MEEUWEN STERVEN IN DE HAVEN", "director": "Rik Kuypers, Roland Verhavert & Ivo Michiels", "dur": "1h27", "location": "Salle Agnès Varda", "category": "Cannes Classics", "gala": false, "abs_s": 4035, "abs_e": 4122}, {"id": 131, "day": "22", "start": "20:00", "title": "Pierre Angénieux Tribute to Akiko Ashizawa", "director": "—", "dur": "1h15", "location": "Salle Buñuel", "category": "Cannes Classics", "gala": false, "abs_s": 4080, "abs_e": 4155}, {"id": 132, "day": "22", "start": "20:15", "title": "ULYSSE — UCR Closing", "director": "Laetitia Masson", "dur": "1h37", "location": "Salle Debussy", "category": "Un Certain Regard", "gala": false, "abs_s": 4095, "abs_e": 4192}, {"id": 133, "day": "22", "start": "20:30", "title": "9 TEMPLES TO HEAVEN", "director": "Sompot Chidgasornpongse", "dur": "2h20", "location": "Olympia", "category": "Directors' Fortnight", "gala": false, "abs_s": 4110, "abs_e": 4250}, {"id": 134, "day": "22", "start": "21:00", "title": "BUTTERFLY JAM", "director": "Kantemir Balagov", "dur": "1h42", "location": "Théâtre Croisette / JW Marriott", "category": "Directors' Fortnight", "gala": false, "abs_s": 4140, "abs_e": 4242}, {"id": 135, "day": "22", "start": "21:30", "title": "JE HAIS LES ACTEURS (I Hate Actors)", "director": "Gérard Krawczyk", "dur": "1h30", "location": "Plage Macé", "category": "Cinéma de la Plage", "gala": false, "abs_s": 4170, "abs_e": 4260}, {"id": 136, "day": "22", "start": "22:00", "title": "L'OBJET DU DÉLIT (CRESCENDO)", "director": "Agnès Jaoui", "dur": "2h13", "location": "Grand Théâtre Lumière", "category": "Special Screening", "gala": true, "abs_s": 4200, "abs_e": 4333}, {"id": 137, "day": "23", "start": "08:45", "title": "COWARD", "director": "Lukas Dhont", "dur": "2h00", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 4845, "abs_e": 4965}, {"id": 138, "day": "23", "start": "08:45", "title": "HISTOIRES DE LA NUIT", "director": "Léa Mysius", "dur": "1h54", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 4845, "abs_e": 4959}, {"id": 139, "day": "23", "start": "09:15", "title": "THE MAN I LOVE", "director": "Ira Sachs", "dur": "1h35", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 4875, "abs_e": 4970}, {"id": 140, "day": "23", "start": "09:15", "title": "UĻA", "director": "Viesturs Kairišs", "dur": "1h42", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 4875, "abs_e": 4977}, {"id": 141, "day": "23", "start": "11:30", "title": "LA BOLA NEGRA", "director": "Javier Calvo & Javier Ambrossi", "dur": "2h35", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 5010, "abs_e": 5165}, {"id": 142, "day": "23", "start": "11:30", "title": "VICTORIAN PSYCHO", "director": "Zachary Wigon", "dur": "1h30", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 5010, "abs_e": 5100}, {"id": 143, "day": "23", "start": "11:45", "title": "DAS GETRÄUMTE ABENTEUER", "director": "Valeska Grisebach", "dur": "2h47", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 5025, "abs_e": 5192}, {"id": 144, "day": "23", "start": "11:45", "title": "NOTRE SALUT", "director": "Emmanuel Marre", "dur": "2h35", "location": "Cineum Salle 3", "category": "Selection Rerun", "gala": false, "abs_s": 5025, "abs_e": 5180}, {"id": 145, "day": "23", "start": "13:45", "title": "THE END OF IT", "director": "Maria Martínez Bayona", "dur": "1h42", "location": "Cineum Screen X", "category": "Selection Rerun", "gala": false, "abs_s": 5145, "abs_e": 5247}, {"id": 146, "day": "23", "start": "14:45", "title": "ULYSSE", "director": "Laetitia Masson", "dur": "1h37", "location": "Cineum Aurore", "category": "Selection Rerun", "gala": false, "abs_s": 5205, "abs_e": 5302}, {"id": 147, "day": "23", "start": "15:00", "title": "L'OBJET DU DÉLIT", "director": "Agnès Jaoui", "dur": "2h13", "location": "Cineum IMAX", "category": "Selection Rerun", "gala": false, "abs_s": 5220, "abs_e": 5353}, {"id": 148, "day": "23", "start": "20:15", "title": "Closing Ceremony", "director": "—", "dur": "—", "location": "Grand Théâtre Lumière", "category": "Ceremony", "gala": true, "abs_s": null, "abs_e": null}, {"id": 149, "day": "23", "start": "21:30", "title": "MON ONCLE", "director": "Jacques Tati", "dur": "1h56", "location": "Plage Macé", "category": "Cinéma de la Plage", "gala": false, "abs_s": 5610, "abs_e": 5726}];
+const travel = {"Grand Théâtre Lumière": {"Grand Théâtre Lumière": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Salle Debussy": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Buñuel": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Agnès Varda": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Bazin": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum IMAX": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Aurore": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Screen X": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Salle 3": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Théâtre Croisette / JW Marriott": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Espace Miramar": {"walk": 11, "scoot": 6, "shuttle": 11, "km": 0.92}, "Olympia": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.22}, "Alexandre III": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.58}, "Le Raimu": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.59}, "Les Arcades": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.27}, "Studio 13": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.85}, "Plage Macé": {"walk": 6, "scoot": 4, "shuttle": 6, "km": 0.46}}, "Salle Debussy": {"Grand Théâtre Lumière": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Debussy": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Salle Buñuel": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Agnès Varda": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Bazin": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum IMAX": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Aurore": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Screen X": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Salle 3": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Théâtre Croisette / JW Marriott": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Espace Miramar": {"walk": 11, "scoot": 6, "shuttle": 11, "km": 0.92}, "Olympia": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.22}, "Alexandre III": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.58}, "Le Raimu": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.59}, "Les Arcades": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.27}, "Studio 13": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.85}, "Plage Macé": {"walk": 6, "scoot": 4, "shuttle": 6, "km": 0.46}}, "Salle Buñuel": {"Grand Théâtre Lumière": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Debussy": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Buñuel": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Salle Agnès Varda": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Bazin": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum IMAX": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Aurore": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Screen X": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Salle 3": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Théâtre Croisette / JW Marriott": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Espace Miramar": {"walk": 11, "scoot": 6, "shuttle": 11, "km": 0.92}, "Olympia": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.22}, "Alexandre III": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.58}, "Le Raimu": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.59}, "Les Arcades": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.27}, "Studio 13": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.85}, "Plage Macé": {"walk": 6, "scoot": 4, "shuttle": 6, "km": 0.46}}, "Salle Agnès Varda": {"Grand Théâtre Lumière": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Debussy": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Buñuel": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Agnès Varda": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Salle Bazin": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum IMAX": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Aurore": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Screen X": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Salle 3": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Théâtre Croisette / JW Marriott": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Espace Miramar": {"walk": 11, "scoot": 6, "shuttle": 11, "km": 0.92}, "Olympia": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.22}, "Alexandre III": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.58}, "Le Raimu": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.59}, "Les Arcades": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.27}, "Studio 13": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.85}, "Plage Macé": {"walk": 6, "scoot": 4, "shuttle": 6, "km": 0.46}}, "Salle Bazin": {"Grand Théâtre Lumière": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Debussy": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Buñuel": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Agnès Varda": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Salle Bazin": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Cineum IMAX": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Aurore": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Screen X": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum Salle 3": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Théâtre Croisette / JW Marriott": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Espace Miramar": {"walk": 11, "scoot": 6, "shuttle": 11, "km": 0.92}, "Olympia": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.22}, "Alexandre III": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.58}, "Le Raimu": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.59}, "Les Arcades": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.27}, "Studio 13": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.85}, "Plage Macé": {"walk": 6, "scoot": 4, "shuttle": 6, "km": 0.46}}, "Cineum IMAX": {"Grand Théâtre Lumière": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Debussy": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Buñuel": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Agnès Varda": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Bazin": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum IMAX": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Cineum Aurore": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum Screen X": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum Salle 3": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Théâtre Croisette / JW Marriott": {"walk": 63, "scoot": 23, "shuttle": 63, "km": 5.29}, "Espace Miramar": {"walk": 67, "scoot": 24, "shuttle": 67, "km": 5.6}, "Olympia": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.6}, "Alexandre III": {"walk": 75, "scoot": 27, "shuttle": 75, "km": 6.23}, "Le Raimu": {"walk": 23, "scoot": 10, "shuttle": 23, "km": 1.9}, "Les Arcades": {"walk": 54, "scoot": 20, "shuttle": 54, "km": 4.49}, "Studio 13": {"walk": 52, "scoot": 19, "shuttle": 52, "km": 4.34}, "Plage Macé": {"walk": 61, "scoot": 22, "shuttle": 61, "km": 5.12}}, "Cineum Aurore": {"Grand Théâtre Lumière": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Debussy": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Buñuel": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Agnès Varda": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Bazin": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum IMAX": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum Aurore": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Cineum Screen X": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum Salle 3": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Théâtre Croisette / JW Marriott": {"walk": 63, "scoot": 23, "shuttle": 63, "km": 5.29}, "Espace Miramar": {"walk": 67, "scoot": 24, "shuttle": 67, "km": 5.6}, "Olympia": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.6}, "Alexandre III": {"walk": 75, "scoot": 27, "shuttle": 75, "km": 6.23}, "Le Raimu": {"walk": 23, "scoot": 10, "shuttle": 23, "km": 1.9}, "Les Arcades": {"walk": 54, "scoot": 20, "shuttle": 54, "km": 4.49}, "Studio 13": {"walk": 52, "scoot": 19, "shuttle": 52, "km": 4.34}, "Plage Macé": {"walk": 61, "scoot": 22, "shuttle": 61, "km": 5.12}}, "Cineum Screen X": {"Grand Théâtre Lumière": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Debussy": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Buñuel": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Agnès Varda": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Bazin": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum IMAX": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum Aurore": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum Screen X": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Cineum Salle 3": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Théâtre Croisette / JW Marriott": {"walk": 63, "scoot": 23, "shuttle": 63, "km": 5.29}, "Espace Miramar": {"walk": 67, "scoot": 24, "shuttle": 67, "km": 5.6}, "Olympia": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.6}, "Alexandre III": {"walk": 75, "scoot": 27, "shuttle": 75, "km": 6.23}, "Le Raimu": {"walk": 23, "scoot": 10, "shuttle": 23, "km": 1.9}, "Les Arcades": {"walk": 54, "scoot": 20, "shuttle": 54, "km": 4.49}, "Studio 13": {"walk": 52, "scoot": 19, "shuttle": 52, "km": 4.34}, "Plage Macé": {"walk": 61, "scoot": 22, "shuttle": 61, "km": 5.12}}, "Cineum Salle 3": {"Grand Théâtre Lumière": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Debussy": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Buñuel": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Agnès Varda": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Salle Bazin": {"walk": 56, "scoot": 21, "shuttle": 18, "km": 4.7}, "Cineum IMAX": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum Aurore": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum Screen X": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.05}, "Cineum Salle 3": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Théâtre Croisette / JW Marriott": {"walk": 63, "scoot": 23, "shuttle": 63, "km": 5.29}, "Espace Miramar": {"walk": 67, "scoot": 24, "shuttle": 67, "km": 5.6}, "Olympia": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.6}, "Alexandre III": {"walk": 75, "scoot": 27, "shuttle": 75, "km": 6.23}, "Le Raimu": {"walk": 23, "scoot": 10, "shuttle": 23, "km": 1.9}, "Les Arcades": {"walk": 54, "scoot": 20, "shuttle": 54, "km": 4.49}, "Studio 13": {"walk": 52, "scoot": 19, "shuttle": 52, "km": 4.34}, "Plage Macé": {"walk": 61, "scoot": 22, "shuttle": 61, "km": 5.12}}, "Théâtre Croisette / JW Marriott": {"Grand Théâtre Lumière": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Salle Debussy": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Salle Buñuel": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Salle Agnès Varda": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Salle Bazin": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Cineum IMAX": {"walk": 63, "scoot": 23, "shuttle": 63, "km": 5.29}, "Cineum Aurore": {"walk": 63, "scoot": 23, "shuttle": 63, "km": 5.29}, "Cineum Screen X": {"walk": 63, "scoot": 23, "shuttle": 63, "km": 5.29}, "Cineum Salle 3": {"walk": 63, "scoot": 23, "shuttle": 63, "km": 5.29}, "Théâtre Croisette / JW Marriott": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Espace Miramar": {"walk": 4, "scoot": 3, "shuttle": 4, "km": 0.32}, "Olympia": {"walk": 9, "scoot": 5, "shuttle": 9, "km": 0.75}, "Alexandre III": {"walk": 12, "scoot": 6, "shuttle": 12, "km": 0.99}, "Le Raimu": {"walk": 62, "scoot": 23, "shuttle": 62, "km": 5.17}, "Les Arcades": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.84}, "Studio 13": {"walk": 16, "scoot": 7, "shuttle": 16, "km": 1.31}, "Plage Macé": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.21}}, "Espace Miramar": {"Grand Théâtre Lumière": {"walk": 11, "scoot": 6, "shuttle": 11, "km": 0.92}, "Salle Debussy": {"walk": 11, "scoot": 6, "shuttle": 11, "km": 0.92}, "Salle Buñuel": {"walk": 11, "scoot": 6, "shuttle": 11, "km": 0.92}, "Salle Agnès Varda": {"walk": 11, "scoot": 6, "shuttle": 11, "km": 0.92}, "Salle Bazin": {"walk": 11, "scoot": 6, "shuttle": 11, "km": 0.92}, "Cineum IMAX": {"walk": 67, "scoot": 24, "shuttle": 67, "km": 5.6}, "Cineum Aurore": {"walk": 67, "scoot": 24, "shuttle": 67, "km": 5.6}, "Cineum Screen X": {"walk": 67, "scoot": 24, "shuttle": 67, "km": 5.6}, "Cineum Salle 3": {"walk": 67, "scoot": 24, "shuttle": 67, "km": 5.6}, "Théâtre Croisette / JW Marriott": {"walk": 4, "scoot": 3, "shuttle": 4, "km": 0.32}, "Espace Miramar": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Olympia": {"walk": 13, "scoot": 6, "shuttle": 13, "km": 1.07}, "Alexandre III": {"walk": 8, "scoot": 5, "shuttle": 8, "km": 0.68}, "Le Raimu": {"walk": 66, "scoot": 24, "shuttle": 66, "km": 5.49}, "Les Arcades": {"walk": 14, "scoot": 7, "shuttle": 14, "km": 1.16}, "Studio 13": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.61}, "Plage Macé": {"walk": 6, "scoot": 4, "shuttle": 6, "km": 0.48}}, "Olympia": {"Grand Théâtre Lumière": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.22}, "Salle Debussy": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.22}, "Salle Buñuel": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.22}, "Salle Agnès Varda": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.22}, "Salle Bazin": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.22}, "Cineum IMAX": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.6}, "Cineum Aurore": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.6}, "Cineum Screen X": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.6}, "Cineum Salle 3": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.6}, "Théâtre Croisette / JW Marriott": {"walk": 9, "scoot": 5, "shuttle": 9, "km": 0.75}, "Espace Miramar": {"walk": 13, "scoot": 6, "shuttle": 13, "km": 1.07}, "Olympia": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Alexandre III": {"walk": 21, "scoot": 9, "shuttle": 21, "km": 1.75}, "Le Raimu": {"walk": 53, "scoot": 20, "shuttle": 53, "km": 4.41}, "Les Arcades": {"walk": 1, "scoot": 2, "shuttle": 1, "km": 0.1}, "Studio 13": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.62}, "Plage Macé": {"walk": 8, "scoot": 5, "shuttle": 8, "km": 0.66}}, "Alexandre III": {"Grand Théâtre Lumière": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.58}, "Salle Debussy": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.58}, "Salle Buñuel": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.58}, "Salle Agnès Varda": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.58}, "Salle Bazin": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.58}, "Cineum IMAX": {"walk": 75, "scoot": 27, "shuttle": 75, "km": 6.23}, "Cineum Aurore": {"walk": 75, "scoot": 27, "shuttle": 75, "km": 6.23}, "Cineum Screen X": {"walk": 75, "scoot": 27, "shuttle": 75, "km": 6.23}, "Cineum Salle 3": {"walk": 75, "scoot": 27, "shuttle": 75, "km": 6.23}, "Théâtre Croisette / JW Marriott": {"walk": 12, "scoot": 6, "shuttle": 12, "km": 0.99}, "Espace Miramar": {"walk": 8, "scoot": 5, "shuttle": 8, "km": 0.68}, "Olympia": {"walk": 21, "scoot": 9, "shuttle": 21, "km": 1.75}, "Alexandre III": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Le Raimu": {"walk": 74, "scoot": 27, "shuttle": 74, "km": 6.16}, "Les Arcades": {"walk": 22, "scoot": 9, "shuttle": 22, "km": 1.84}, "Studio 13": {"walk": 27, "scoot": 11, "shuttle": 27, "km": 2.28}, "Plage Macé": {"walk": 14, "scoot": 7, "shuttle": 14, "km": 1.13}}, "Le Raimu": {"Grand Théâtre Lumière": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.59}, "Salle Debussy": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.59}, "Salle Buñuel": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.59}, "Salle Agnès Varda": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.59}, "Salle Bazin": {"walk": 55, "scoot": 20, "shuttle": 55, "km": 4.59}, "Cineum IMAX": {"walk": 23, "scoot": 10, "shuttle": 23, "km": 1.9}, "Cineum Aurore": {"walk": 23, "scoot": 10, "shuttle": 23, "km": 1.9}, "Cineum Screen X": {"walk": 23, "scoot": 10, "shuttle": 23, "km": 1.9}, "Cineum Salle 3": {"walk": 23, "scoot": 10, "shuttle": 23, "km": 1.9}, "Théâtre Croisette / JW Marriott": {"walk": 62, "scoot": 23, "shuttle": 62, "km": 5.17}, "Espace Miramar": {"walk": 66, "scoot": 24, "shuttle": 66, "km": 5.49}, "Olympia": {"walk": 53, "scoot": 20, "shuttle": 53, "km": 4.41}, "Alexandre III": {"walk": 74, "scoot": 27, "shuttle": 74, "km": 6.16}, "Le Raimu": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Les Arcades": {"walk": 52, "scoot": 19, "shuttle": 52, "km": 4.32}, "Studio 13": {"walk": 47, "scoot": 18, "shuttle": 47, "km": 3.94}, "Plage Macé": {"walk": 61, "scoot": 22, "shuttle": 61, "km": 5.05}}, "Les Arcades": {"Grand Théâtre Lumière": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.27}, "Salle Debussy": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.27}, "Salle Buñuel": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.27}, "Salle Agnès Varda": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.27}, "Salle Bazin": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.27}, "Cineum IMAX": {"walk": 54, "scoot": 20, "shuttle": 54, "km": 4.49}, "Cineum Aurore": {"walk": 54, "scoot": 20, "shuttle": 54, "km": 4.49}, "Cineum Screen X": {"walk": 54, "scoot": 20, "shuttle": 54, "km": 4.49}, "Cineum Salle 3": {"walk": 54, "scoot": 20, "shuttle": 54, "km": 4.49}, "Théâtre Croisette / JW Marriott": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.84}, "Espace Miramar": {"walk": 14, "scoot": 7, "shuttle": 14, "km": 1.16}, "Olympia": {"walk": 1, "scoot": 2, "shuttle": 1, "km": 0.1}, "Alexandre III": {"walk": 22, "scoot": 9, "shuttle": 22, "km": 1.84}, "Le Raimu": {"walk": 52, "scoot": 19, "shuttle": 52, "km": 4.32}, "Les Arcades": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Studio 13": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Plage Macé": {"walk": 9, "scoot": 5, "shuttle": 9, "km": 0.73}}, "Studio 13": {"Grand Théâtre Lumière": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.85}, "Salle Debussy": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.85}, "Salle Buñuel": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.85}, "Salle Agnès Varda": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.85}, "Salle Bazin": {"walk": 10, "scoot": 5, "shuttle": 10, "km": 0.85}, "Cineum IMAX": {"walk": 52, "scoot": 19, "shuttle": 52, "km": 4.34}, "Cineum Aurore": {"walk": 52, "scoot": 19, "shuttle": 52, "km": 4.34}, "Cineum Screen X": {"walk": 52, "scoot": 19, "shuttle": 52, "km": 4.34}, "Cineum Salle 3": {"walk": 52, "scoot": 19, "shuttle": 52, "km": 4.34}, "Théâtre Croisette / JW Marriott": {"walk": 16, "scoot": 7, "shuttle": 16, "km": 1.31}, "Espace Miramar": {"walk": 19, "scoot": 8, "shuttle": 19, "km": 1.61}, "Olympia": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.62}, "Alexandre III": {"walk": 27, "scoot": 11, "shuttle": 27, "km": 2.28}, "Le Raimu": {"walk": 47, "scoot": 18, "shuttle": 47, "km": 3.94}, "Les Arcades": {"walk": 7, "scoot": 4, "shuttle": 7, "km": 0.6}, "Studio 13": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}, "Plage Macé": {"walk": 15, "scoot": 7, "shuttle": 15, "km": 1.26}}, "Plage Macé": {"Grand Théâtre Lumière": {"walk": 6, "scoot": 4, "shuttle": 6, "km": 0.46}, "Salle Debussy": {"walk": 6, "scoot": 4, "shuttle": 6, "km": 0.46}, "Salle Buñuel": {"walk": 6, "scoot": 4, "shuttle": 6, "km": 0.46}, "Salle Agnès Varda": {"walk": 6, "scoot": 4, "shuttle": 6, "km": 0.46}, "Salle Bazin": {"walk": 6, "scoot": 4, "shuttle": 6, "km": 0.46}, "Cineum IMAX": {"walk": 61, "scoot": 22, "shuttle": 61, "km": 5.12}, "Cineum Aurore": {"walk": 61, "scoot": 22, "shuttle": 61, "km": 5.12}, "Cineum Screen X": {"walk": 61, "scoot": 22, "shuttle": 61, "km": 5.12}, "Cineum Salle 3": {"walk": 61, "scoot": 22, "shuttle": 61, "km": 5.12}, "Théâtre Croisette / JW Marriott": {"walk": 3, "scoot": 3, "shuttle": 3, "km": 0.21}, "Espace Miramar": {"walk": 6, "scoot": 4, "shuttle": 6, "km": 0.48}, "Olympia": {"walk": 8, "scoot": 5, "shuttle": 8, "km": 0.66}, "Alexandre III": {"walk": 14, "scoot": 7, "shuttle": 14, "km": 1.13}, "Le Raimu": {"walk": 61, "scoot": 22, "shuttle": 61, "km": 5.05}, "Les Arcades": {"walk": 9, "scoot": 5, "shuttle": 9, "km": 0.73}, "Studio 13": {"walk": 15, "scoot": 7, "shuttle": 15, "km": 1.26}, "Plage Macé": {"walk": 0, "scoot": 0, "shuttle": 0, "km": 0.0}}};
+const catColors = {"Compétition": "#c0392b", "Un Certain Regard": "#8e44ad", "Cannes Première": "#16a085", "Special Screening": "#d35400", "Midnight Screening": "#2c3e50", "Cannes Classics": "#b8860b", "Rendez-vous": "#2980b9", "Next-Day Screening": "#7f8c8d", "Selection Rerun": "#95a5a6", "Directors' Fortnight": "#27ae60", "Critics' Week": "#e91e63", "ACID": "#e67e22", "La CINEF": "#9b59b6", "Short Films": "#34495e", "Ceremony": "#c0392b", "Cinéma de la Plage": "#1abc9c"};
+
+// Уникальные категории и локации
+const allCategories = [...new Set(events.map(e => e.category))];
+const allLocations = [...new Set(events.map(e => e.location))].sort();
 
 const state = {
-  selectedId: null,
+  selectedIds: new Set(),       // Set<id> — мульти-выбор
   search: "",
   day: "all",
   transport: "walk",
   buffer: 20,
+  activeCats: new Set(allCategories),  // по умолчанию все включены
+  activeLocs: new Set(allLocations),
 };
 
 const grid = document.getElementById("grid");
 const stats = document.getElementById("stats");
 const legend = document.getElementById("legend");
 const clearBtn = document.getElementById("clear");
+const selectionBar = document.getElementById("selectionBar");
+const selectionList = document.getElementById("selectionList");
+const catFilters = document.getElementById("catFilters");
+const locFilters = document.getElementById("locFilters");
 
-function classify(film, sel) {
-  if (!sel) return "neutral";
-  if (film.id === sel.id) return "selected";
-  if (film.abs_s === null || sel.abs_s === null) return "neutral";
-
-  const t = travel[sel.location] && travel[sel.location][film.location]
-    ? travel[sel.location][film.location][state.transport]
-    : 15;
-  const buffer = state.buffer;
-
-  if (film.abs_s >= sel.abs_e) {
-    const gap = film.abs_s - sel.abs_e;
-    if (gap >= t + buffer) return "ok";
-    if (gap >= t) return "tight";
-    return "conflict";
-  }
-  if (film.abs_e <= sel.abs_s) {
-    const gap = sel.abs_s - film.abs_e;
-    if (gap >= t + buffer) return "ok";
-    if (gap >= t) return "tight";
-    return "conflict";
-  }
-  return "conflict";
+// Рендеринг кнопок-фильтров категорий
+function buildCategoryFilters() {
+  catFilters.innerHTML = allCategories.map(cat => {
+    const color = catColors[cat] || "#999";
+    const active = state.activeCats.has(cat);
+    return `<button class="${active ? 'active' : ''}" data-cat="${escapeAttr(cat)}" style="--btn-color:${color}">${escapeHtml(cat)}</button>`;
+  }).join("");
+  updateCatSummary();
 }
 
-function travelText(sel, film) {
-  if (!sel || sel.id === film.id) return "";
-  if (sel.location === film.location) return `📍 same venue`;
-  const t = travel[sel.location] && travel[sel.location][film.location];
+function updateCatSummary() {
+  const total = allCategories.length;
+  const active = state.activeCats.size;
+  const el = document.getElementById("catSummary");
+  if (active === total) el.textContent = `all ${total} active`;
+  else if (active === 0) el.textContent = `none active`;
+  else el.textContent = `${active} of ${total} active`;
+}
+
+// Рендеринг чекбоксов локаций
+function buildLocationFilters() {
+  locFilters.innerHTML = allLocations.map(loc => {
+    const checked = state.activeLocs.has(loc) ? "checked" : "";
+    return `<label><input type="checkbox" data-loc="${escapeAttr(loc)}" ${checked}> ${escapeHtml(loc)}</label>`;
+  }).join("");
+  updateLocSummary();
+}
+
+function updateLocSummary() {
+  const total = allLocations.length;
+  const active = state.activeLocs.size;
+  const el = document.getElementById("locSummary");
+  if (active === total) el.textContent = `all ${total} active`;
+  else if (active === 0) el.textContent = `none active`;
+  else el.textContent = `${active} of ${total} active`;
+}
+
+// Свёртывание / развёртывание секций фильтров
+document.querySelectorAll('h3[data-toggle]').forEach(h => {
+  h.addEventListener('click', (ev) => {
+    // не сворачиваем если кликнули на reset-link
+    if (ev.target.closest('.reset-link')) return;
+    const id = h.dataset.toggle;
+    document.getElementById(id).classList.toggle('collapsed');
+  });
+});
+
+// Проверка: пересекаются ли два события (с учётом дороги и буфера)
+function eventsConflict(a, b) {
+  if (a.id === b.id) return false;
+  if (a.abs_s === null || b.abs_s === null) return false;
+  const t = travel[a.location] && travel[a.location][b.location]
+    ? travel[a.location][b.location][state.transport]
+    : 15;
+  // конфликт = два сеанса пересекаются ИЛИ между ними меньше времени дороги
+  if (a.abs_s < b.abs_e && b.abs_s < a.abs_e) return true;  // пересечение
+  if (a.abs_s >= b.abs_e) {
+    return (a.abs_s - b.abs_e) < t;
+  }
+  if (b.abs_s >= a.abs_e) {
+    return (b.abs_s - a.abs_e) < t;
+  }
+  return false;
+}
+
+// Находит ВСЕ выбранные события, с которыми у film конфликт
+function conflictingSelected(film) {
+  const conflicts = [];
+  for (const id of state.selectedIds) {
+    const sel = events.find(e => e.id === id);
+    if (sel && eventsConflict(film, sel)) conflicts.push(sel);
+  }
+  return conflicts;
+}
+
+// Классификация карточки относительно ВСЕХ выбранных
+function classify(film) {
+  if (state.selectedIds.has(film.id)) return "selected";
+  if (state.selectedIds.size === 0) return "neutral";
+  if (film.abs_s === null) return "neutral";
+
+  const conflicts = conflictingSelected(film);
+  if (conflicts.length > 0) return "locked";
+
+  // Не конфликтует ни с чем — проверим, насколько комфортно успеть.
+  // Возьмём ближайший выбранный сеанс по времени и проверим запас.
+  let minMargin = Infinity;
+  for (const id of state.selectedIds) {
+    const sel = events.find(e => e.id === id);
+    if (!sel || sel.abs_s === null) continue;
+    const t = travel[sel.location] && travel[sel.location][film.location]
+      ? travel[sel.location][film.location][state.transport]
+      : 15;
+    let gap = null;
+    if (film.abs_s >= sel.abs_e) gap = film.abs_s - sel.abs_e;
+    else if (film.abs_e <= sel.abs_s) gap = sel.abs_s - film.abs_e;
+    if (gap !== null) {
+      const margin = gap - t;
+      if (margin < minMargin) minMargin = margin;
+    }
+  }
+  if (minMargin === Infinity) return "neutral";
+  if (minMargin >= state.buffer) return "ok";
+  return "tight";
+}
+
+// Текст с временем дороги — теперь относительно ближайшего выбранного
+function travelInfoFor(film) {
+  if (state.selectedIds.size === 0) return "";
+  if (state.selectedIds.has(film.id)) return "";
+
+  // Найдём самый "близкий" по времени выбранный сеанс
+  let nearest = null;
+  let nearestGap = Infinity;
+  for (const id of state.selectedIds) {
+    const sel = events.find(e => e.id === id);
+    if (!sel || sel.abs_s === null || film.abs_s === null) continue;
+    let gap;
+    if (film.abs_s >= sel.abs_e) gap = film.abs_s - sel.abs_e;
+    else if (film.abs_e <= sel.abs_s) gap = sel.abs_s - film.abs_e;
+    else gap = -1;  // overlap
+    if (Math.abs(gap) < Math.abs(nearestGap)) {
+      nearest = sel;
+      nearestGap = gap;
+    }
+  }
+  if (!nearest) return "";
+
+  const t = travel[nearest.location] && travel[nearest.location][film.location]
+    ? travel[nearest.location][film.location][state.transport]
+    : null;
   if (!t) return "";
   const mins = t[state.transport];
   const icons = { walk: "🚶", scoot: "🛴", shuttle: "🚌" };
   const icon = icons[state.transport];
 
-  let main = "";
-  if (film.abs_s !== null && sel.abs_s !== null) {
-    let gap = null;
-    if (film.abs_s >= sel.abs_e) gap = film.abs_s - sel.abs_e;
-    else if (film.abs_e <= sel.abs_s) gap = sel.abs_s - film.abs_e;
-
-    if (gap !== null) {
-      const margin = gap - mins;
-      if (margin >= 0) {
-        main = `${icon} ${mins} min travel · window ${gap} min (${margin} min spare)`;
-      } else {
-        main = `${icon} ${mins} min travel · window ${gap} min — short by ${-margin} min`;
-      }
+  let main;
+  if (nearest.location === film.location) {
+    main = `📍 same venue as ${escapeHtml(nearest.title)}`;
+  } else if (nearestGap < 0) {
+    main = `${icon} overlaps with ${escapeHtml(nearest.title)}`;
+  } else {
+    const margin = nearestGap - mins;
+    if (margin >= 0) {
+      main = `${icon} ${mins} min from ${escapeHtml(nearest.title)} · ${margin} min spare`;
     } else {
-      main = `${icon} ${mins} min travel · screenings overlap`;
+      main = `${icon} ${mins} min from ${escapeHtml(nearest.title)} · short by ${-margin} min`;
     }
   }
 
-  // показать другие варианты транспорта если они отличаются
   const alts = [];
   for (const mode of ["walk", "scoot", "shuttle"]) {
-    if (mode !== state.transport && t[mode] !== mins) {
-      const altIcon = icons[mode];
-      alts.push(`${altIcon} ${t[mode]}m`);
+    if (mode !== state.transport && t[mode] !== mins && nearest.location !== film.location) {
+      alts.push(`${icons[mode]} ${t[mode]}m`);
     }
   }
   const altLine = alts.length ? `<div class="options">other: ${alts.join(" · ")}</div>` : "";
@@ -339,19 +659,45 @@ function travelText(sel, film) {
 }
 
 function statusBadge(cls) {
-  if (cls === "selected") return '<span class="badge selected">selected</span>';
+  if (cls === "selected") return '<span class="badge selected">in plan</span>';
   if (cls === "ok") return '<span class="badge ok">doable</span>';
   if (cls === "tight") return '<span class="badge tight">tight</span>';
-  if (cls === "conflict") return '<span class="badge conflict">conflict</span>';
+  if (cls === "locked") return '<span class="badge conflict">locked</span>';
   return "";
 }
 
+function renderSelectionBar() {
+  if (state.selectedIds.size === 0) {
+    selectionBar.style.display = "none";
+    selectionList.innerHTML = "";
+    return;
+  }
+  const selectedEvents = [...state.selectedIds]
+    .map(id => events.find(e => e.id === id))
+    .filter(Boolean)
+    .sort((a, b) => {
+      if (a.day !== b.day) return parseInt(a.day) - parseInt(b.day);
+      return (a.abs_s || 0) - (b.abs_s || 0);
+    });
+  selectionBar.style.display = "block";
+  selectionList.innerHTML = selectedEvents.map(e => `
+    <div class="selection-item">
+      <div class="info">
+        <b>${escapeHtml(e.title)}</b>
+        <div class="meta">May ${e.day} · ${e.start} · ${e.dur} · ${escapeHtml(e.location)}</div>
+      </div>
+      <button data-remove="${e.id}" title="Remove from plan">×</button>
+    </div>
+  `).join("");
+}
+
 function render() {
-  const sel = state.selectedId !== null ? events.find(e => e.id === state.selectedId) : null;
   const q = state.search.toLowerCase().trim();
 
   const filtered = events.filter(e => {
     if (state.day !== "all" && e.day !== state.day) return false;
+    if (!state.activeCats.has(e.category)) return false;
+    if (!state.activeLocs.has(e.location)) return false;
     if (q) {
       const hay = `${e.title} ${e.director} ${e.location} ${e.category}`.toLowerCase();
       if (!hay.includes(q)) return false;
@@ -359,39 +705,38 @@ function render() {
     return true;
   });
 
-  if (sel) {
-    const inDay = events.filter(e => e.day === sel.day && e.id !== sel.id);
-    const okCnt = inDay.filter(e => classify(e, sel) === "ok").length;
-    const tightCnt = inDay.filter(e => classify(e, sel) === "tight").length;
-    const conflictCnt = inDay.filter(e => classify(e, sel) === "conflict").length;
-    stats.innerHTML = `<strong>Selected:</strong> ${escapeHtml(sel.title)} (May ${sel.day}, ${sel.start}, ${escapeHtml(sel.location)}) ·
-      Same day: <strong>${okCnt}</strong> doable ·
-      <strong>${tightCnt}</strong> tight · <strong>${conflictCnt}</strong> won't make it`;
+  // Статистика
+  if (state.selectedIds.size > 0) {
+    const lockedCnt = events.filter(e => classify(e) === "locked").length;
+    stats.innerHTML = `<strong>${state.selectedIds.size}</strong> in your plan · <strong>${lockedCnt}</strong> screenings locked due to conflicts · Showing ${filtered.length} screenings below`;
     legend.style.display = "flex";
     clearBtn.disabled = false;
   } else {
-    stats.innerHTML = `Showing ${filtered.length} of ${events.length} screenings. Click a film to see which others you can still catch.`;
+    stats.innerHTML = `Showing ${filtered.length} of ${events.length} screenings. Click a film to add it to your plan.`;
     legend.style.display = "none";
     clearBtn.disabled = true;
   }
 
+  renderSelectionBar();
+
   if (filtered.length === 0) {
-    grid.innerHTML = '<div class="empty">No screenings match your search.</div>';
+    grid.innerHTML = '<div class="empty">No screenings match your filters.</div>';
     return;
   }
 
   grid.innerHTML = filtered.map(e => {
-    const cls = classify(e, sel);
+    const cls = classify(e);
     const cardClass = cls === "selected" ? "selected" :
                       cls === "ok" ? "ok" :
                       cls === "tight" ? "tight" :
-                      cls === "conflict" ? "conflict" : "";
-    const tt = sel ? travelText(sel, e) : "";
-    const badge = sel ? statusBadge(cls) : "";
+                      cls === "locked" ? "locked" : "";
+    const tt = travelInfoFor(e);
+    const badge = state.selectedIds.size > 0 ? statusBadge(cls) : "";
     const catColor = catColors[e.category] || "#999";
     const galaIcon = e.gala ? '<span class="gala-icon" title="Black tie required">🎩</span>' : "";
+    const titleAttr = cls === "locked" ? `title="Conflicts with: ${conflictingSelected(e).map(c => c.title).join(', ').replace(/"/g, '&quot;')}"` : '';
     return `
-      <div class="film ${cardClass}" data-id="${e.id}" style="--cat-color:${catColor}">
+      <div class="film ${cardClass}" data-id="${e.id}" style="--cat-color:${catColor}" ${titleAttr}>
         ${badge}
         <div class="film-title">${escapeHtml(e.title)}${galaIcon}</div>
         <div class="film-meta">
@@ -413,16 +758,71 @@ function escapeHtml(s) {
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   }[c]));
 }
+function escapeAttr(s) {
+  return String(s).replace(/"/g, '&quot;');
+}
 
+// Клик по карточке — добавить/убрать в план (если не locked)
 grid.addEventListener("click", (ev) => {
   const card = ev.target.closest(".film");
   if (!card) return;
+  if (card.classList.contains("locked")) return; // блокировка
   const id = parseInt(card.dataset.id, 10);
-  state.selectedId = state.selectedId === id ? null : id;
+  if (state.selectedIds.has(id)) {
+    state.selectedIds.delete(id);
+  } else {
+    state.selectedIds.add(id);
+  }
   render();
-  if (state.selectedId !== null) window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
+// Удаление из плана через крестик
+selectionList.addEventListener("click", (ev) => {
+  const btn = ev.target.closest("button[data-remove]");
+  if (!btn) return;
+  const id = parseInt(btn.dataset.remove, 10);
+  state.selectedIds.delete(id);
+  render();
+});
+
+// Категории-фильтры
+catFilters.addEventListener("click", (ev) => {
+  const btn = ev.target.closest("button[data-cat]");
+  if (!btn) return;
+  const cat = btn.dataset.cat;
+  if (state.activeCats.has(cat)) {
+    state.activeCats.delete(cat);
+  } else {
+    state.activeCats.add(cat);
+  }
+  buildCategoryFilters();
+  render();
+});
+
+document.getElementById("resetCats").addEventListener("click", () => {
+  state.activeCats = new Set(allCategories);
+  buildCategoryFilters();
+  render();
+});
+
+// Чекбоксы локаций
+locFilters.addEventListener("change", (ev) => {
+  const cb = ev.target.closest('input[type="checkbox"][data-loc]');
+  if (!cb) return;
+  const loc = cb.dataset.loc;
+  if (cb.checked) state.activeLocs.add(loc);
+  else state.activeLocs.delete(loc);
+  updateLocSummary();
+  render();
+});
+
+document.getElementById("resetLocs").addEventListener("click", () => {
+  state.activeLocs = new Set(allLocations);
+  buildLocationFilters();
+  render();
+});
+
+// Остальные контролы
 document.getElementById("search").addEventListener("input", (e) => { state.search = e.target.value; render(); });
 document.getElementById("transport").addEventListener("change", (e) => { state.transport = e.target.value; render(); });
 document.getElementById("buffer").addEventListener("change", (e) => { state.buffer = parseInt(e.target.value, 10); render(); });
@@ -433,8 +833,11 @@ document.getElementById("dayTabs").addEventListener("click", (e) => {
   state.day = e.target.dataset.day;
   render();
 });
-clearBtn.addEventListener("click", () => { state.selectedId = null; render(); });
+clearBtn.addEventListener("click", () => { state.selectedIds.clear(); render(); });
 
+// Init
+buildCategoryFilters();
+buildLocationFilters();
 render();
 </script>
 </body>
